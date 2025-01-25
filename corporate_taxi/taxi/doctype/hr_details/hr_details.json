@@ -1,0 +1,54 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-01-22 22:19:56.614180",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "hr_name",
+  "designation",
+  "contact_no",
+  "email"
+ ],
+ "fields": [
+  {
+   "fieldname": "hr_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "HR Name"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Designation"
+  },
+  {
+   "fieldname": "contact_no",
+   "fieldtype": "Phone",
+   "in_list_view": 1,
+   "label": "Contact No",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Email",
+   "options": "Email"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-01-22 22:21:29.129373",
+ "modified_by": "Administrator",
+ "module": "taxi",
+ "name": "HR Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

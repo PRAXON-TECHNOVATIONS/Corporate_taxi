@@ -1,0 +1,120 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-01-25 12:08:54.563483",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_rf5o",
+  "amended_from",
+  "driver_id",
+  "driver_name",
+  "booking",
+  "column_break_kb9n",
+  "trip_start",
+  "trip_end",
+  "otp",
+  "status",
+  "section_break_usyc",
+  "table_wupe"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_rf5o",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Driver Trip",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "driver_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Driver ID",
+   "reqd": 1
+  },
+  {
+   "fieldname": "driver_name",
+   "fieldtype": "Data",
+   "label": "Driver Name"
+  },
+  {
+   "fieldname": "trip_start",
+   "fieldtype": "Time",
+   "label": "Trip Start",
+   "reqd": 1
+  },
+  {
+   "fieldname": "trip_end",
+   "fieldtype": "Time",
+   "label": "Trip End"
+  },
+  {
+   "fieldname": "otp",
+   "fieldtype": "Int",
+   "label": "OTP",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Start\nRunning\nCompleted",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_kb9n",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_usyc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "table_wupe",
+   "fieldtype": "Table",
+   "options": "Driver Trip Details"
+  },
+  {
+   "fieldname": "booking",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Booking ID",
+   "options": "Booking",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-01-25 12:27:53.352519",
+ "modified_by": "Administrator",
+ "module": "taxi",
+ "name": "Driver Trip",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

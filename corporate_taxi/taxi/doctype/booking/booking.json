@@ -1,0 +1,105 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-01-25 11:48:41.750062",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_y5t9",
+  "amended_from",
+  "booking_request",
+  "customer",
+  "column_break_347v",
+  "booking_date",
+  "booking_details_section",
+  "booking_details",
+  "section_break_baci",
+  "total_amount"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_y5t9",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Booking",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "booking_request",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Booking Request",
+   "options": "Booking Request",
+   "reqd": 1
+  },
+  {
+   "fieldname": "booking_date",
+   "fieldtype": "Date",
+   "label": "Booking Date",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "booking_request.company",
+   "fieldname": "customer",
+   "fieldtype": "Data",
+   "label": "Customer"
+  },
+  {
+   "fieldname": "column_break_347v",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "booking_details_section",
+   "fieldtype": "Section Break",
+   "label": "Booking Details"
+  },
+  {
+   "fieldname": "booking_details",
+   "fieldtype": "Table",
+   "label": "Booking Details",
+   "options": "Booking Form Details"
+  },
+  {
+   "fieldname": "section_break_baci",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Currency",
+   "label": "Total Amount"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-01-25 12:01:04.063798",
+ "modified_by": "Administrator",
+ "module": "taxi",
+ "name": "Booking",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

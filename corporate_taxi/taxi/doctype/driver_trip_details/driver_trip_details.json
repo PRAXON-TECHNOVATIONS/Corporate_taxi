@@ -1,0 +1,58 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-01-25 12:07:28.008648",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "guest_name",
+  "guest_phone_number",
+  "column_break_xzuc",
+  "pick_up_location",
+  "drop_off_location"
+ ],
+ "fields": [
+  {
+   "fieldname": "guest_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Guest Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "guest_phone_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Guest Phone Number"
+  },
+  {
+   "fieldname": "pick_up_location",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Pick Up Location"
+  },
+  {
+   "fieldname": "drop_off_location",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Drop off Location"
+  },
+  {
+   "fieldname": "column_break_xzuc",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-01-25 12:18:51.865886",
+ "modified_by": "Administrator",
+ "module": "taxi",
+ "name": "Driver Trip Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
