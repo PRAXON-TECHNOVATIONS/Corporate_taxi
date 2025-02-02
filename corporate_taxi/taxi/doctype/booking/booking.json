@@ -1,20 +1,27 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "naming_series:",
  "creation": "2025-01-25 11:48:41.750062",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "section_break_y5t9",
+  "naming_series",
   "amended_from",
   "booking_request",
   "customer",
+  "company",
   "column_break_347v",
   "booking_date",
+  "status",
   "booking_details_section",
   "booking_details",
   "section_break_baci",
-  "total_amount"
+  "total_amount",
+  "column_break_ylta",
+  "paid_amount",
+  "connections_tab"
  ],
  "fields": [
   {
@@ -40,16 +47,18 @@
    "reqd": 1
   },
   {
+   "default": "Today",
    "fieldname": "booking_date",
    "fieldtype": "Date",
-   "label": "Booking Date",
+   "label": "Postind Date",
    "reqd": 1
   },
   {
    "fetch_from": "booking_request.company",
    "fieldname": "customer",
    "fieldtype": "Data",
-   "label": "Customer"
+   "label": "Customer",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_347v",
@@ -73,16 +82,59 @@
   {
    "fieldname": "total_amount",
    "fieldtype": "Currency",
-   "label": "Total Amount"
+   "label": "Total Amount",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.docstatus == 1",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "To Bill\nPartial Bill\nCompleted"
+  },
+  {
+   "default": "BO-.MM.-.###",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "BO-.MM.-.###"
+  },
+  {
+   "fieldname": "column_break_ylta",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "paid_amount",
+   "fieldtype": "Currency",
+   "label": "Paid Amount"
+  },
+  {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2025-01-25 12:01:04.063798",
+ "links": [
+  {
+   "link_doctype": "Driver Trip",
+   "link_fieldname": "booking"
+  }
+ ],
+ "modified": "2025-02-01 12:28:21.023323",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Booking",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
@@ -101,5 +153,18 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [
+  {
+   "color": "Gray",
+   "title": "To Bill"
+  },
+  {
+   "color": "Orange",
+   "title": "Partial Complete"
+  },
+  {
+   "color": "Green",
+   "title": "Completed"
+  }
+ ]
 }

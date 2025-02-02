@@ -137,13 +137,17 @@ app_license = "mit"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
+doc_events = {
 # 	"*": {
 # 		"on_update": "method",
 # 		"on_cancel": "method",
 # 		"on_trash": "method"
 # 	}
-# }
+    # "Sales Invoice":{
+    #     "on_submit":"corporate_taxi.override.sales_invoice.on_submit",
+    #     "on_cancel":"corporate_taxi.override.sales_invoice.on_cancel"
+    # }
+}
 
 # Scheduled Tasks
 # ---------------

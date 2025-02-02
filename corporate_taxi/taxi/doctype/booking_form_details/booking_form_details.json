@@ -8,24 +8,27 @@
  "field_order": [
   "guest_name",
   "guest_phone_number",
+  "status",
+  "reference_id",
   "column_break_0fs5",
   "vehicle_type",
-  "posting_date",
+  "from_date_time",
+  "to_date_time",
   "location_time_section",
   "pick_up_location",
   "drop_off_location",
   "column_break_5fpv",
-  "pick_up_time",
   "trip_type",
-  "driver_details_section",
-  "driver",
-  "column_break_c87a",
-  "driver_phone_number",
   "booked_vehicle_details_section",
   "vehicle",
   "column_break_ou6j",
   "vehicle_number",
   "vehicle_color",
+  "driver_details_section",
+  "driver",
+  "driver_user_id",
+  "column_break_c87a",
+  "driver_phone_number",
   "billing_amount_section",
   "amount"
  ],
@@ -45,8 +48,9 @@
   },
   {
    "fieldname": "vehicle_type",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "label": "Vehicle Type",
+   "options": "Vehicle Type",
    "reqd": 1
   },
   {
@@ -70,12 +74,6 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Drop off Location",
-   "reqd": 1
-  },
-  {
-   "fieldname": "pick_up_time",
-   "fieldtype": "Data",
-   "label": "Pick Up Time",
    "reqd": 1
   },
   {
@@ -143,12 +141,6 @@
    "label": "Vehicle Color"
   },
   {
-   "fieldname": "posting_date",
-   "fieldtype": "Date",
-   "label": "Posting Date",
-   "reqd": 1
-  },
-  {
    "fieldname": "billing_amount_section",
    "fieldtype": "Section Break",
    "label": "Billing Amount"
@@ -159,12 +151,42 @@
    "in_list_view": 1,
    "label": "Amount",
    "reqd": 1
+  },
+  {
+   "fieldname": "from_date_time",
+   "fieldtype": "Datetime",
+   "label": "From Date & Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_date_time",
+   "fieldtype": "Datetime",
+   "label": "To Date & Time",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "driver.custom_user",
+   "fieldname": "driver_user_id",
+   "fieldtype": "Link",
+   "label": "Driver User ID",
+   "options": "User"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Open\nTrip Completed"
+  },
+  {
+   "fieldname": "reference_id",
+   "fieldtype": "Data",
+   "label": "Reference ID"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-01-25 11:59:26.374649",
+ "modified": "2025-02-01 18:55:22.956897",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Booking Form Details",
