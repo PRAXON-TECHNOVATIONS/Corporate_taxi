@@ -2,9 +2,14 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Driver Trip", {
- 
+     // Update the form title whenever the status changes
+     status: function(frm) {
+        update_form_title(frm);
+    },
+
     on_submit(frm){
         frm.set_value('trip_end', frappe.datetime.now_time());
+        frm.set_value('status', );
             frm.refresh_field("trip_end")
     },
 
@@ -15,33 +20,34 @@ frappe.ui.form.on("Driver Trip", {
             frm.refresh_field("trip_end");
         }
     },
-    booking(frm){
+    booking(frm) {
         frappe.call({
-            method:"frappe.client.get",
-            args:{
-                doctype:"Booking",
-                name:frm.doc.booking,
+            method: "frappe.client.get",
+            args: {
+                doctype: "Booking",
+                name: frm.doc.booking,
             },
-            callback:function(r){
+            callback: function (r) {
                 frm.clear_table("table_wupe");
-
-                // Add new rows from the booking details
+    
+                // add new rows from the booking details where status is Open
                 var book_details = r.message.booking_details;
-                book_details.forEach(function(data) {
-                    frm.add_child("table_wupe", {
-                        "guest_name": data.guest_name,
-                        "guest_phone_number": data.guest_phone_number,
-                        "pick_up_location": data.pick_up_location,
-                        "drop_off_location": data.drop_off_location,
-                        "reference_id":data.name
-                    });
+                book_details.forEach(function (data) {
+                    if (data.status == "Open") {  
+                        frm.add_child("table_wupe", {
+                            "guest_name": data.guest_name,
+                            "guest_phone_number": data.guest_phone_number,
+                            "pick_up_location": data.pick_up_location,
+                            "drop_off_location": data.drop_off_location,
+                            "reference_id": data.name
+                        });
+                    }
                 });
-        
-                // Refresh the table to reflect the changes
+    
                 frm.refresh_field("table_wupe");
             }
-        })
-    },
+        });
+    },    
     driver_id: function(frm) {
         frappe.call({
             method: "corporate_taxi.taxi.doctype.driver_trip.driver_trip.get_setted_driver_booking_id",
@@ -64,3 +70,12 @@ frappe.ui.form.on("Driver Trip", {
         
     }
 });
+
+
+
+    // Function to update the form title by appending the status
+    function update_form_title(frm) {
+        let status = frm.doc.status || 'Start'; // Default to 'Start' if status is not set
+        let base_title = frm.doc.name; // Use the document name as the base title
+        frm.set_title(`${base_title} - ${status}`);
+    }

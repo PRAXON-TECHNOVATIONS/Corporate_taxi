@@ -115,6 +115,7 @@
    "show_dashboard": 1
   },
   {
+   "fetch_from": "booking_request.customer",
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
@@ -130,7 +131,7 @@
    "link_fieldname": "booking"
   }
  ],
- "modified": "2025-02-01 12:28:21.023323",
+ "modified": "2025-02-02 12:38:01.597027",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Booking",
