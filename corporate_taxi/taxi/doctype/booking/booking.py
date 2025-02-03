@@ -260,39 +260,86 @@ class Booking(Document):
 			)
 
 
+	# def on_cancel(self):
+	# 	def delete_history(booking_id, vehicle=None, driver=None):
+	# 		filters = {"booking_id": booking_id}
+			
+	# 		# Filter for vehicle if provided
+	# 		if vehicle:
+	# 			filters["parent"] = vehicle
+			
+	# 		# Filter for driver if provided
+	# 		if driver:
+	# 			filters["parent"] = driver
+
+	# 		# Fetch the records from Vehicle History
+	# 		history_records = frappe.get_all(
+	# 			"Vehicle History",
+	# 			filters=filters,
+	# 			fields=["name"],
+	# 		)
+	# 		# Delete each of the fetched records
+	# 		for record in history_records:
+	# 			frappe.delete_doc("Vehicle History", record.name, ignore_permissions=True)
+
+	# 	for data in self.booking_details:
+	# 		# First, delete records for vehicle
+	# 		delete_history(data.parent, vehicle=data.vehicle)
+			
+	# 		# Then, delete records for driver
+	# 		delete_history(data.parent, driver=data.driver)
+
+	# 		# Show success message
+	# 		frappe.msgprint(
+	# 			f"Booking for Vehicle '{data.vehicle}' and Driver '{data.driver}' has been successfully canceled."
+	# 		)
+
+
 	def on_cancel(self):
-		def delete_history(booking_id, vehicle=None, driver=None):
-			filters = {"booking_id": booking_id}
-			
-			# Filter for vehicle if provided
-			if vehicle:
-				filters["parent"] = vehicle
-			
-			# Filter for driver if provided
-			if driver:
-				filters["parent"] = driver
-
-			# Fetch the records from Vehicle History
-			history_records = frappe.get_all(
-				"Vehicle History",
-				filters=filters,
-				fields=["name"],
-			)
-			# Delete each of the fetched records
-			for record in history_records:
-				frappe.delete_doc("Vehicle History", record.name, ignore_permissions=True)
-
+		# Revert child records' status to "Open"
 		for data in self.booking_details:
-			# First, delete records for vehicle
-			delete_history(data.parent, vehicle=data.vehicle)
-			
-			# Then, delete records for driver
-			delete_history(data.parent, driver=data.driver)
+			frappe.db.set_value("Booking Request Details", data.reference_id, "status", "Open")
 
-			# Show success message
+		# Check if there are any other booked details in the parent booking request
+		child_statuses = frappe.get_all(
+			"Booking Request Details",
+			filters={"parent": self.booking_request},
+			fields=["status"]
+		)
+
+		# Determine parent booking status
+		all_open = all(status_record.status == "Open" for status_record in child_statuses)
+		partial_booked = any(status_record.status == "Booked" for status_record in child_statuses)
+
+		# Update parent status based on child statuses
+		new_status = "Open" if all_open else "Partial Booked" if partial_booked else "Booked"
+		frappe.db.set_value("Booking Request", self.booking_request, "status", new_status)
+
+		# Function to delete history records
+		def delete_history(booking_id, parent_value, record_type):
+			filters = {
+				"booking_id": booking_id,
+				"parent": parent_value
+			}
+
+			history_records = frappe.get_all(
+				f"{record_type} History",
+				filters=filters,
+				fields=["name"]
+			)
+
+			for record in history_records:
+				frappe.delete_doc(f"{record_type} History", record.name, ignore_permissions=True)
+
+		# Delete related history records and show cancellation message
+		for data in self.booking_details:
+			delete_history(data.parent, data.vehicle, "Vehicle")
+			delete_history(data.parent, data.driver, "Vehicle")
+
 			frappe.msgprint(
 				f"Booking for Vehicle '{data.vehicle}' and Driver '{data.driver}' has been successfully canceled."
 			)
+
 
 
 
