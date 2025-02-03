@@ -34,15 +34,15 @@ frappe.ui.form.on("Booking", {
        
         
 
-        // Apply the dynamic filter globally before making any API calls
-        frm.fields_dict.booking_details.grid.get_field('driver').get_query = function(doc, cdt, cdn) {
-            let current_row = locals[cdt][cdn];
-            return {
-                filters: current_row && unavailable_drivers[current_row.name]
-                    ? { name: ['not in', unavailable_drivers[current_row.name]] }
-                    : {}
-            };
-        };
+        // // Apply the dynamic filter globally before making any API calls
+        // frm.fields_dict.booking_details.grid.get_field('driver').get_query = function(doc, cdt, cdn) {
+        //     let current_row = locals[cdt][cdn];
+        //     return {
+        //         filters: current_row && unavailable_drivers[current_row.name]
+        //             ? { name: ['not in', unavailable_drivers[current_row.name]] }
+        //             : {}
+        //     };
+        // };
         
        
        
@@ -207,6 +207,28 @@ function calculate_total(frm) {
 
 frappe.ui.form.on('Booking Form Details', {
 
+    // based on the item selection set item price in amount field
+    duty_type:function(frm, cdt, cdn) {
+        let row = locals[cdt][cdn];
+
+        frappe.call({
+            method: 'frappe.client.get_value',
+            args: {
+                doctype: 'Item Price',
+                filters: {
+                    item_code: row.duty_type,
+                    selling: 1
+                },
+                fieldname: 'price_list_rate'
+            },
+            callback: function(response) {
+                if (response && response.message) {
+                    frappe.model.set_value(cdt, cdn, 'amount', response.message.price_list_rate);
+                }
+            }
+        });
+
+    },
     vehicle: function(frm, cdt, cdn) {
         let row = locals[cdt][cdn];
 
@@ -264,6 +286,31 @@ frappe.ui.form.on('Booking Form Details', {
 
 
 
+
+    frappe.ui.form.on('Extra Charges', {
+        // based on the item selection set item price in amount field
+        charges_type:function(frm, cdt, cdn) {
+            let row = locals[cdt][cdn];
+
+            frappe.call({
+                method: 'frappe.client.get_value',
+                args: {
+                    doctype: 'Item Price',
+                    filters: {
+                        item_code: row.charges_type,
+                        selling: 1
+                    },
+                    fieldname: 'price_list_rate'
+                },
+                callback: function(response) {
+                    if (response && response.message) {
+                        frappe.model.set_value(cdt, cdn, 'price', response.message.price_list_rate);
+                    }
+                }
+            });
+
+        },
+    })
 
     // Function to fetch available vehicles
 function fetch_available_vehicles(frm, row) {

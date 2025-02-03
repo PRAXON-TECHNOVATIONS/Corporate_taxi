@@ -8,10 +8,12 @@
  "field_order": [
   "guest_name",
   "guest_phone_number",
+  "duty_type",
   "column_break_xzuc",
   "pick_up_location",
   "drop_off_location",
-  "reference_id"
+  "reference_id",
+  "amount"
  ],
  "fields": [
   {
@@ -48,12 +50,25 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "reference_id"
+  },
+  {
+   "fieldname": "duty_type",
+   "fieldtype": "Link",
+   "label": "Duty Type",
+   "link_filters": "[[\"Item\",\"item_group\",\"=\",\"Duty Type\"]]",
+   "options": "Item"
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Amount"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-01-30 01:10:39.545474",
+ "modified": "2025-02-04 00:06:25.286207",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Driver Trip Details",

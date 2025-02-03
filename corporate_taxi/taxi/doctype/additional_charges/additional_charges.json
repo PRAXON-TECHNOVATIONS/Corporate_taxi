@@ -1,0 +1,60 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-02-02 17:01:23.589344",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "charges_type",
+  "extra_kmhour",
+  "column_break_pmsb",
+  "price_per_kmhour",
+  "total_extra_charges"
+ ],
+ "fields": [
+  {
+   "fieldname": "charges_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Charges Type",
+   "link_filters": "[[\"Item\",\"item_group\",\"=\",\"Extra Charges\"]]",
+   "options": "Item"
+  },
+  {
+   "fieldname": "extra_kmhour",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Extra KM/Hour"
+  },
+  {
+   "fieldname": "column_break_pmsb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "price_per_kmhour",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Price Per KM/Hour"
+  },
+  {
+   "fieldname": "total_extra_charges",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total Extra Charges",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-02-02 17:07:07.637286",
+ "modified_by": "Administrator",
+ "module": "taxi",
+ "name": "Additional Charges",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

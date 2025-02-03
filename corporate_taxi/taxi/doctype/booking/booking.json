@@ -17,10 +17,14 @@
   "status",
   "booking_details_section",
   "booking_details",
+  "section_break_bxsj",
+  "extra_charges",
   "section_break_baci",
   "total_amount",
   "column_break_ylta",
   "paid_amount",
+  "trip_history_tab",
+  "trip_history_details",
   "connections_tab"
  ],
  "fields": [
@@ -54,7 +58,7 @@
    "reqd": 1
   },
   {
-   "fetch_from": "booking_request.company",
+   "fetch_from": "booking_request.customer",
    "fieldname": "customer",
    "fieldtype": "Data",
    "label": "Customer",
@@ -106,6 +110,7 @@
   {
    "fieldname": "paid_amount",
    "fieldtype": "Currency",
+   "hidden": 1,
    "label": "Paid Amount"
   },
   {
@@ -115,12 +120,35 @@
    "show_dashboard": 1
   },
   {
-   "fetch_from": "booking_request.customer",
+   "fetch_from": "booking_request.company",
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "fieldname": "section_break_bxsj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "extra_charges",
+   "fieldtype": "Table",
+   "label": "Extra Charges",
+   "options": "Extra Charges"
+  },
+  {
+   "fieldname": "trip_history_tab",
+   "fieldtype": "Tab Break",
+   "label": "Trip History"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "trip_history_details",
+   "fieldtype": "Table",
+   "label": "Trip History Details",
+   "options": "Trip History",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -131,7 +159,7 @@
    "link_fieldname": "booking"
   }
  ],
- "modified": "2025-02-02 12:38:01.597027",
+ "modified": "2025-02-03 23:42:26.286191",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Booking",

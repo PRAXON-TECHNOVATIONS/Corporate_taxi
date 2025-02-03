@@ -86,7 +86,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-01 11:40:49.240237",
+ "modified": "2025-02-03 22:33:31.905056",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Booking Request",
@@ -109,5 +109,18 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [
+  {
+   "color": "Orange",
+   "title": "Open"
+  },
+  {
+   "color": "Light Blue",
+   "title": "Partial Booked"
+  },
+  {
+   "color": "Green",
+   "title": "Booked"
+  }
+ ]
 }

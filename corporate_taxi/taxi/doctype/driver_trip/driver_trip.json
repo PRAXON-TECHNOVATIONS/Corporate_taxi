@@ -18,7 +18,9 @@
   "otp",
   "status",
   "section_break_usyc",
-  "table_wupe"
+  "table_wupe",
+  "section_break_lwdv",
+  "additional_charges"
  ],
  "fields": [
   {
@@ -100,12 +102,22 @@
    "fieldtype": "Select",
    "label": "Series",
    "options": "DT-.MM.-.###"
+  },
+  {
+   "fieldname": "section_break_lwdv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "additional_charges",
+   "fieldtype": "Table",
+   "label": "Additional Charges",
+   "options": "Additional Charges"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-02 12:40:19.568687",
+ "modified": "2025-02-02 17:15:43.000550",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Driver Trip",
