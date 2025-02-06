@@ -245,7 +245,7 @@
    "print_hide": 0,
    "print_hide_if_no_value": 0,
    "print_width": null,
-   "read_only": 1,
+   "read_only": 0,
    "read_only_depends_on": null,
    "report_hide": 0,
    "reqd": 0,
@@ -1545,6 +1545,29 @@
    "property_type": "Data",
    "row_name": null,
    "value": "[\"license_plate\", \"make\", \"custom_vehicle_type\", \"column_break_3\", \"model\", \"custom_partner\", \"custom_owner\", \"vehicle_details\", \"last_odometer\", \"acquisition_date\", \"location\", \"column_break_8\", \"chassis_no\", \"vehicle_value\", \"employee\", \"custom_vehicle_images\", \"custom_front_images\", \"custom_front_view\", \"custom_column_break_b6ex4\", \"custom_left_side_image\", \"custom_left_view\", \"custom_column_break_0xh30\", \"custom_back_image\", \"custom_back_view\", \"custom_column_break_ptria\", \"custom_right_side_image\", \"custom_right_view\", \"insurance_details\", \"insurance_company\", \"policy_no\", \"column_break_15\", \"start_date\", \"end_date\", \"additional_details\", \"fuel_type\", \"uom\", \"carbon_check_date\", \"column_break_21\", \"color\", \"wheels\", \"doors\", \"amended_from\", \"custom_availability\", \"custom_booking_history\", \"custom_fastag_information\", \"custom_fastag_number\", \"custom_fastag_status\", \"custom_column_break_srstl\", \"custom_fastag_validity_start_date\", \"custom_fastag_expiry_date\"]"
+  },
+  {
+   "_assign": null,
+   "_comments": null,
+   "_liked_by": null,
+   "_user_tags": null,
+   "creation": "2025-02-05 22:40:08.112126",
+   "default_value": null,
+   "doc_type": "Vehicle",
+   "docstatus": 0,
+   "doctype_or_field": "DocType",
+   "field_name": null,
+   "idx": 0,
+   "is_system_generated": 0,
+   "modified": "2025-02-05 22:40:08.112126",
+   "modified_by": "Administrator",
+   "module": null,
+   "name": "Vehicle-main-image_field",
+   "owner": "Administrator",
+   "property": "image_field",
+   "property_type": "Data",
+   "row_name": null,
+   "value": "custom_front_images"
   }
  ],
  "sync_on_migrate": 1

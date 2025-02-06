@@ -15,10 +15,11 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Charges Type",
-   "link_filters": "[[\"Item\",\"item_group\",\"=\",\"Extra Charges\"]]",
+   "link_filters": "[]",
    "options": "Item"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "price",
    "fieldtype": "Currency",
    "in_list_view": 1,
@@ -28,7 +29,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-02-02 16:37:54.049381",
+ "modified": "2025-02-05 00:11:05.205342",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Extra Charges",

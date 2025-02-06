@@ -359,24 +359,65 @@ def get_driver_vehicle_list(driver):
 
 
 
+# @frappe.whitelist()
+# def get_available_drivers(from_datetime, to_datetime):
+#     # Fetch booked drivers within the specified date-time range
+#     booked_drivers = frappe.db.sql("""
+#         SELECT parent
+#         FROM `tabVehicle History`
+#         WHERE 
+#             (from_date_time <= %(to_datetime)s AND to_date_time >= %(from_datetime)s)
+#     """, {
+#         "from_datetime": from_datetime,
+#         "to_datetime": to_datetime
+#     }, as_dict=True)
+
+#     # Extract driver names from the query result
+#     booked_driver_list = [d['parent'] for d in booked_drivers]
+
+#     # Return a unique list of booked drivers
+#     return list(set(booked_driver_list))
+
 @frappe.whitelist()
-def get_available_drivers(from_datetime, to_datetime):
-    # Fetch booked drivers within the specified date-time range
-    booked_drivers = frappe.db.sql("""
+def get_available_drivers(vehicle, from_datetime, to_datetime):
+    # Step 1: Get drivers assigned to the given vehicle
+    excluded_drivers = frappe.db.sql("""
+        SELECT parent
+        FROM `tabVehicle Assignment`
+        WHERE parenttype = 'Driver' AND vehicle = %(vehicle)s
+    """, {
+        "vehicle": vehicle
+    }, as_dict=True)
+
+    # Convert to a list of driver IDs to exclude
+    excluded_driver_list = [d['parent'] for d in excluded_drivers]
+
+    # Step 2: Fetch available drivers who are not assigned to the given vehicle
+    drivers = frappe.db.sql("""
         SELECT parent
         FROM `tabVehicle History`
         WHERE 
             (from_date_time <= %(to_datetime)s AND to_date_time >= %(from_datetime)s)
+            AND parent NOT IN %(excluded_drivers)s
+        
+        UNION
+        
+        SELECT parent
+        FROM `tabVehicle Assignment`
+        WHERE 
+            parenttype = 'Driver' AND parent NOT IN %(excluded_drivers)s
     """, {
         "from_datetime": from_datetime,
-        "to_datetime": to_datetime
+        "to_datetime": to_datetime,
+        "excluded_drivers": tuple(excluded_driver_list) or ('',)  # Handles empty list case
     }, as_dict=True)
 
-    # Extract driver names from the query result
-    booked_driver_list = [d['parent'] for d in booked_drivers]
+    # Extract unique driver names
+    driver_list = [d['parent'] for d in drivers]
 
-    # Return a unique list of booked drivers
-    return list(set(booked_driver_list))
+    return list(set(driver_list))
+
+
 
 @frappe.whitelist()
 def get_available_vehicles(vehicle_type, from_datetime, to_datetime):

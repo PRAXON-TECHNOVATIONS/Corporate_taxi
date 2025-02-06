@@ -21,6 +21,7 @@
   "extra_charges",
   "section_break_baci",
   "total_amount",
+  "total_amount_with_extra_charges",
   "column_break_ylta",
   "paid_amount",
   "trip_history_tab",
@@ -132,9 +133,10 @@
    "fieldtype": "Section Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "extra_charges",
    "fieldtype": "Table",
-   "label": "Extra Charges",
+   "label": "Charges",
    "options": "Extra Charges"
   },
   {
@@ -147,7 +149,13 @@
    "fieldname": "trip_history_details",
    "fieldtype": "Table",
    "label": "Trip History Details",
-   "options": "Trip History",
+   "options": "Trip History"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "total_amount_with_extra_charges",
+   "fieldtype": "Currency",
+   "label": "Total Amount With Extra Charges",
    "read_only": 1
   }
  ],
@@ -159,7 +167,7 @@
    "link_fieldname": "booking"
   }
  ],
- "modified": "2025-02-03 23:42:26.286191",
+ "modified": "2025-02-06 01:40:13.648649",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Booking",
