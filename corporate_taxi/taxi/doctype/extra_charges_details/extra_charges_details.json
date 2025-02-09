@@ -1,0 +1,40 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-02-08 21:48:57.744422",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "extra_charges_type",
+  "price"
+ ],
+ "fields": [
+  {
+   "fieldname": "extra_charges_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Extra Charges Type",
+   "link_filters": "[[\"Item\",\"item_group\",\"=\",\"Extra Charges\"]]",
+   "options": "Item"
+  },
+  {
+   "fieldname": "price",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Price"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-02-08 22:07:05.697321",
+ "modified_by": "Administrator",
+ "module": "taxi",
+ "name": "Extra Charges Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

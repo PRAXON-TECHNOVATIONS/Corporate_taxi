@@ -143,10 +143,13 @@ doc_events = {
 # 		"on_cancel": "method",
 # 		"on_trash": "method"
 # 	}
-    # "Sales Invoice":{
-    #     "on_submit":"corporate_taxi.override.sales_invoice.on_submit",
-    #     "on_cancel":"corporate_taxi.override.sales_invoice.on_cancel"
-    # }
+    "Sales Invoice":{
+        "on_submit":"corporate_taxi.override.sales_invoice.on_submit",
+        "on_cancel":"corporate_taxi.override.sales_invoice.on_cancel"
+    },
+    "Driver":{
+        "before_save":"corporate_taxi.override.driver.before_save",
+    }
 }
 
 # Scheduled Tasks

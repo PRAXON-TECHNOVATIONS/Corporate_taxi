@@ -6,38 +6,52 @@ frappe.ui.form.on("Driver Trip", {
      status: function(frm) {
         update_form_title(frm);
     },
+    // onload: function(frm) {
+        
+    //     // Fetch the User document for the current logged-in user
+    //     frappe.call({
+    //         method: 'frappe.client.get',
+    //         args: {
+    //             doctype: 'User',
+    //             name: frappe.session.user
+    //         },
+    //         callback: function(response) {
+                
+    //             if (response.message) {
+    //                 // Check if the role profile name is "Driver"
+    //                 let roleprofile_name = response.message.role_profile_name;
+    //                     console.log(roleprofile_name);
+    //                 if (roleprofile_name === 'Driver') {
+    //                      frappe.call({
+    //                         method: 'frappe.client.get_list',
+    //                         args: {
+    //                             doctype: 'Driver',
+    //                             filters: {
+    //                                 custom_user: frappe.session.user
+    //                             },
+    //                             fields: ['name', 'custom_user'] 
+    //                         },
+    //                         callback: function(driverResponse) {
+    //                             console.log(driverResponse);
+    //                             if (driverResponse.message && driverResponse.message.length > 0) {
+    //                                 let driver = driverResponse.message[0].name; 
+    //                                 frm.set_value('driver_id', driver);  
+    //                             }
+    //                         }
+    //                     });
+    //                 }
+    //             }
+    //         }
+    //     });
+    // },
+
+
     onload: function(frm) {
-        // Fetch the User document for the current logged-in user
         frappe.call({
-            method: 'frappe.client.get',
-            args: {
-                doctype: 'User',
-                name: frappe.session.user
-            },
+            method: 'corporate_taxi.taxi.doctype.driver_trip.driver_trip.get_driver_for_user',
             callback: function(response) {
-                if (response.message) {
-                    // Check if the role profile name is "Driver"
-                    let roleprofile_name = response.message.role_profile_name;
-                    
-                    if (roleprofile_name === 'Driver') {
-                        frappe.call({
-                            method: 'frappe.client.get_list',
-                            args: {
-                                doctype: 'Driver',
-                                filters: {
-                                    custom_user: frappe.session.user
-                                },
-                                fields: ['name', 'custom_user'] 
-                            },
-                            callback: function(driverResponse) {
-                                console.log(driverResponse);
-                                if (driverResponse.message && driverResponse.message.length > 0) {
-                                    let driver = driverResponse.message[0].name; 
-                                    frm.set_value('driver_id', driver);  
-                                }
-                            }
-                        });
-                    }
+                if (response.message && response.message.driver_id) {
+                    frm.set_value('driver_id', response.message.driver_id);
                 }
             }
         });

@@ -18,6 +18,8 @@
   "booking_details_section",
   "booking_details",
   "section_break_bxsj",
+  "extra_charges_details",
+  "column_break_fbbk",
   "extra_charges",
   "section_break_baci",
   "total_amount",
@@ -111,8 +113,8 @@
   {
    "fieldname": "paid_amount",
    "fieldtype": "Currency",
-   "hidden": 1,
-   "label": "Paid Amount"
+   "label": "Paid Amount",
+   "read_only": 1
   },
   {
    "fieldname": "connections_tab",
@@ -137,7 +139,8 @@
    "fieldname": "extra_charges",
    "fieldtype": "Table",
    "label": "Charges",
-   "options": "Extra Charges"
+   "options": "Extra Charges",
+   "read_only": 1
   },
   {
    "fieldname": "trip_history_tab",
@@ -157,6 +160,16 @@
    "fieldtype": "Currency",
    "label": "Total Amount With Extra Charges",
    "read_only": 1
+  },
+  {
+   "fieldname": "extra_charges_details",
+   "fieldtype": "Table",
+   "label": "Extra Charges Details",
+   "options": "Extra Charges Details"
+  },
+  {
+   "fieldname": "column_break_fbbk",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -167,7 +180,7 @@
    "link_fieldname": "booking"
   }
  ],
- "modified": "2025-02-06 01:40:13.648649",
+ "modified": "2025-02-08 22:08:28.765799",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Booking",

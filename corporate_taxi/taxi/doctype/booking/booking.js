@@ -40,50 +40,29 @@ frappe.ui.form.on("Booking", {
     },
     refresh: function(frm) {
        
-        // if (frm.doc.status != "Completed") {
-        //     frm.add_custom_button(__('Create Invoice'), function() {
-        //         let customer_name = frm.doc.customer;
-        //         let total_amount = frm.doc.total_amount - frm.doc.paid_amount;
-        
-        //         // Create a new Sales Invoice
-        //         frappe.model.with_doctype('Sales Invoice', function() {
-        //             let invoice = frappe.model.get_new_doc('Sales Invoice');
-        //             invoice.customer = customer_name;
-        //             invoice.custom_reference_booking_id = frm.doc.name;
-        
-        //             // Add items for extra charges from the child table
-        //             $.each(frm.doc.extra_charges || [], function(index, charge) {
-        //                 let charge_item = frappe.model.add_child(invoice, 'items');
-                        
-        //                 // Set the item code and quantity first
-        //                 charge_item.item_code = charge.charges_type;  // 'charges_type' is the item code
-        //                 charge_item.qty = 1;  // Default quantity
-        //                 charge_item.price_list_rate = 0
-        //             });
-        
-        //            setTimeout(() => {
-        //                  // Now loop through the items and set the rate after the row is added
-        //             $.each(invoice.items || [], function(index, item) {
-        //                 let charge = frm.doc.extra_charges[index];
-        //                 if (item.item_code === charge.charges_type) {
-                            
-        //                     item.rate = charge.price;  // Set the custom rate
-                            
-        //                     // Set the amount manually
-        //                     item.amount = item.qty * item.rate;
-        //                 }
-        //             });
-        //            }, 2000);    
-        
-        //             // Open the new Sales Invoice form
-        //             frappe.set_route('Form', 'Sales Invoice', invoice.name);
-        //         });
-        //     });
-        // }
-        
+        // hide row for particular driver user
+            frm.fields_dict['booking_details'].grid.grid_rows.forEach(row => {
+                let child = row.doc;
+                
+                frappe.call({
+                    method: 'corporate_taxi.taxi.doctype.driver_trip.driver_trip.get_driver_for_user',
+                    callback: function(response) {
+                        if (child.driver !== response.message.driver_id) {
+                            row.wrapper.hide();  
+                        }
+                    }
+                })
+            });
+     
 
 
-        if (frm.doc.status != "Completed") {
+            if (
+                frm.doc.status != "Completed" &&
+                (frappe.user.has_role("Supplier") ||
+                 frappe.user.has_role("System Manager") ||
+                 frappe.user.has_role("Accounts User") ||
+                 frappe.user.has_role("Accounts Manager"))
+            ) {
             frm.add_custom_button(__('Create Invoice'), function() {
                 let customer_name = frm.doc.customer;
                 let total_amount = frm.doc.total_amount - frm.doc.paid_amount;
@@ -247,7 +226,7 @@ frappe.ui.form.on('Booking Form Details', {
 
 });
 
-// ✅ General function to check available drivers
+//function to check available drivers
 function check_available_drivers(frm, cdt, cdn) {
     let row = locals[cdt][cdn];
 
@@ -269,7 +248,7 @@ function check_available_drivers(frm, cdt, cdn) {
     }
 }
 
-// ✅ General function to check available vehicles
+//function to check available vehicles
 function check_available_vehicles(frm, cdt, cdn) {
     let row = locals[cdt][cdn];
 
@@ -305,6 +284,33 @@ function check_available_vehicles(frm, cdt, cdn) {
                     doctype: 'Item Price',
                     filters: {
                         item_code: row.charges_type,
+                        selling: 1
+                    },
+                    fieldname: 'price_list_rate'
+                },
+                callback: function(response) {
+                    if (response && response.message) {
+                        frappe.model.set_value(cdt, cdn, 'price', response.message.price_list_rate);
+                    }
+                }
+            });
+
+        },
+    })
+
+
+
+    frappe.ui.form.on('Extra Charges Details', {
+        // based on the item selection set item price in amount field
+        extra_charges_type:function(frm, cdt, cdn) {
+            let row = locals[cdt][cdn];
+
+            frappe.call({
+                method: 'frappe.client.get_value',
+                args: {
+                    doctype: 'Item Price',
+                    filters: {
+                        item_code: row.extra_charges_type,
                         selling: 1
                     },
                     fieldname: 'price_list_rate'

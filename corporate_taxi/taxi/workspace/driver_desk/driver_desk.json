@@ -1,0 +1,50 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"DGFAGXb_fT\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Driver Desk</span>\",\"col\":12}},{\"id\":\"DZ-PS7Fm-M\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Driver\",\"col\":3}},{\"id\":\"DTo4B2l1g-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Driver Trip\",\"col\":3}}]",
+ "creation": "2025-02-08 22:44:21.603658",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "share",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Driver Desk",
+ "links": [],
+ "modified": "2025-02-08 22:49:03.844167",
+ "modified_by": "Administrator",
+ "module": "taxi",
+ "name": "Driver Desk",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Driver"
+  }
+ ],
+ "sequence_id": 30.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Driver",
+   "link_to": "Driver",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Driver Trip",
+   "link_to": "Driver Trip",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Driver Desk"
+}

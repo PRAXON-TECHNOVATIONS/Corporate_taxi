@@ -100,7 +100,7 @@ class DriverTrip(Document):
             # Update the total sum field (you may need to add a field for this if it doesn't exist)
             booking_doc.total_amount_with_extra_charges = total_price
 
-            booking_doc.save()
+            booking_doc.save(ignore_permissions = True)
 
     frappe.db.commit()
 
@@ -222,3 +222,15 @@ def create_or_update_trip_history(self, merged_record):
         })
         trip_history.insert(ignore_permissions=True)
 
+
+
+@frappe.whitelist()
+def get_driver_for_user(user=None):
+    user = user or frappe.session.user
+
+    user_doc = frappe.get_doc('User', user)
+    if user_doc.role_profile_name == 'Driver':
+        driver = frappe.get_value('Driver', {'custom_user': user}, ['name'])
+        if driver:
+            return {'driver_id': driver}
+    return {}
