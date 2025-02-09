@@ -72,29 +72,27 @@ frappe.ui.form.on("Driver Trip", {
     },
     booking(frm) {
         frappe.call({
-            method: "frappe.client.get",
+            method: "corporate_taxi.taxi.doctype.driver_trip.driver_trip.get_booking_details",
             args: {
-                doctype: "Booking",
-                name: frm.doc.booking,
+                booking_name: frm.doc.booking,
+                driver_id: frm.doc.driver_id
             },
             callback: function (r) {
                 frm.clear_table("table_wupe");
     
-                // Add new rows from the booking details where status is Open and driver matches
-                var book_details = r.message.booking_details;
-                book_details.forEach(function (data) {
-                    if (data.status == "Open" && data.driver == frm.doc.driver_id) {  
+                if (r.message) {
+                    r.message.forEach(function (data) {
                         frm.add_child("table_wupe", {
                             "guest_name": data.guest_name,
                             "guest_phone_number": data.guest_phone_number,
                             "pick_up_location": data.pick_up_location,
                             "drop_off_location": data.drop_off_location,
                             "duty_type": data.duty_type,
-                            "reference_id": data.name,
-                            "amount":data.amount
+                            "reference_id": data.reference_id,
+                            "amount": data.amount
                         });
-                    }
-                });
+                    });
+                }
     
                 frm.refresh_field("table_wupe");
             }

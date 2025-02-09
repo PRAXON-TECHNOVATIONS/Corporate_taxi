@@ -176,11 +176,29 @@ def get_setted_driver_booking_id(driver):
         return []
 
     # Fetch the booking id linked to the selected driver in booking form
-    booking_id = frappe.db.get_all(
+    # booking_id = frappe.db.get_all(
+    #     "Booking Form Details",
+    #     filters={"driver": driver,"status":"Open"},
+    #     fields=["parent"]
+    # )
+    # Step 1: Get all Booking documents with docstatus = 1
+    approved_bookings = frappe.get_all(
+        "Booking",
+        filters={"docstatus": 1},
+        pluck="name"  # This returns a list of booking names
+    )
+
+    # Step 2: Get Booking Form Details where driver matches, status is 'Open', and parent is in the approved bookings
+    booking_id = frappe.get_all(
         "Booking Form Details",
-        filters={"driver": driver},
+        filters={
+            "driver": driver,
+            "status": "Open",
+            "parent": ["in", approved_bookings]
+        },
         fields=["parent"]
     )
+
 
     return booking_id
 
@@ -234,3 +252,24 @@ def get_driver_for_user(user=None):
         if driver:
             return {'driver_id': driver}
     return {}
+
+
+# get booking details as per selection booking id
+@frappe.whitelist()
+def get_booking_details(booking_name, driver_id):
+    booking = frappe.get_doc("Booking", booking_name)
+    filtered_details = []
+    
+    for detail in booking.booking_details:
+        if detail.status == "Open" and detail.driver == driver_id:
+            filtered_details.append({
+                "guest_name": detail.guest_name,
+                "guest_phone_number": detail.guest_phone_number,
+                "pick_up_location": detail.pick_up_location,
+                "drop_off_location": detail.drop_off_location,
+                "duty_type": detail.duty_type,
+                "reference_id": detail.name,
+                "amount": detail.amount
+            })
+    
+    return filtered_details

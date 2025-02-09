@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"DGFAGXb_fT\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Driver Desk</span>\",\"col\":12}},{\"id\":\"DZ-PS7Fm-M\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Driver\",\"col\":3}},{\"id\":\"DTo4B2l1g-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Driver Trip\",\"col\":3}}]",
+ "content": "[{\"id\":\"DGFAGXb_fT\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Driver Desk</span>\",\"col\":12}},{\"id\":\"DZ-PS7Fm-M\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Driver\",\"col\":3}},{\"id\":\"DTo4B2l1g-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Driver Trip\",\"col\":3}},{\"id\":\"zoYhKI2qmx\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Al-GaKtMZd\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Booking Summary Report\",\"col\":3}}]",
  "creation": "2025-02-08 22:44:21.603658",
  "custom_blocks": [],
  "docstatus": 0,
@@ -8,12 +8,12 @@
  "for_user": "",
  "hide_custom": 0,
  "icon": "share",
- "idx": 0,
+ "idx": 2,
  "indicator_color": "green",
  "is_hidden": 0,
  "label": "Driver Desk",
  "links": [],
- "modified": "2025-02-08 22:49:03.844167",
+ "modified": "2025-02-09 16:55:21.258738",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Driver Desk",
@@ -36,6 +36,13 @@
    "link_to": "Driver",
    "stats_filter": "[]",
    "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Booking Summary Report",
+   "link_to": "Booking Summary",
+   "type": "Report"
   },
   {
    "color": "Grey",
