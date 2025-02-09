@@ -148,7 +148,13 @@ doc_events = {
         "on_cancel":"corporate_taxi.override.sales_invoice.on_cancel"
     },
     "Driver":{
-        "before_save":"corporate_taxi.override.driver.before_save",
+        "on_update":"corporate_taxi.override.driver.on_update",
+    },
+    "Supplier":{
+        "on_update":"corporate_taxi.override.partners.on_update",
+    },
+    "Customer":{
+        "on_update":"corporate_taxi.override.customer.on_update",
     }
 }
 

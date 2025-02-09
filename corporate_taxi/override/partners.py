@@ -10,7 +10,7 @@ def on_update(doc, method=None):
         old_permission = frappe.get_all('User Permission', 
             filters={
                 'user': old_custom_user,
-                'allow': 'Driver',
+                'allow': 'Supplier',
                 'for_value': doc.name
             },
             fields=['name']
@@ -23,7 +23,7 @@ def on_update(doc, method=None):
     existing_permission = frappe.get_all('User Permission', 
         filters={
             'user': doc.custom_user,
-            'allow': 'Driver',
+            'allow': 'Supplier',
             'for_value': doc.name
         },
         fields=['name']
@@ -33,7 +33,7 @@ def on_update(doc, method=None):
     if not existing_permission and doc.custom_user:
         permission = frappe.new_doc('User Permission')
         permission.user = doc.custom_user
-        permission.allow = 'Driver'
+        permission.allow = 'Supplier'
         permission.for_value = doc.name
         permission.insert(ignore_permissions=True)
 

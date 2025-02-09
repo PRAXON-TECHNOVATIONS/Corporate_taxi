@@ -41,18 +41,21 @@ frappe.ui.form.on("Booking", {
     refresh: function(frm) {
        
         // hide row for particular driver user
-            frm.fields_dict['booking_details'].grid.grid_rows.forEach(row => {
-                let child = row.doc;
+            // frm.fields_dict['booking_details'].grid.grid_rows.forEach(row => {
+            //     let child = row.doc;
                 
-                frappe.call({
-                    method: 'corporate_taxi.taxi.doctype.driver_trip.driver_trip.get_driver_for_user',
-                    callback: function(response) {
-                        if (child.driver !== response.message.driver_id) {
-                            row.wrapper.hide();  
-                        }
-                    }
-                })
-            });
+            //     frappe.call({
+            //         method: 'corporate_taxi.taxi.doctype.driver_trip.driver_trip.get_driver_for_user',
+            //         callback: function(response) {
+            //             if (child.driver !== response.message.driver_id) {
+            //                 row.wrapper.hide();  
+            //             }
+            //             else{
+            //                 row.wrapper.show();
+            //             }
+            //         }
+            //     })
+            // });
      
 
 
