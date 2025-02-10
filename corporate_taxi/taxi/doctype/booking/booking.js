@@ -98,6 +98,13 @@ frappe.ui.form.on("Booking", {
                         });
                     }, 500);
         
+
+                    setTimeout(() => {
+                        $.each(cur_frm.doc.items || [], function(index, row) {
+                            cur_frm.script_manager.trigger('item_code', row.doctype, row.name);
+                        });
+                        
+                    }, 1000);
                     // Open the new Sales Invoice form
                     frappe.set_route('Form', 'Sales Invoice', invoice.name);
                 });
@@ -120,23 +127,22 @@ frappe.ui.form.on("Booking", {
     },
 
 
-    
+   
     booking_request(frm) {
         var booking_req_id = frm.doc.booking_request;
     
         if (!booking_req_id) return;
     
         frappe.call({
-            method: "frappe.client.get",
+            method: "corporate_taxi.taxi.doctype.booking.booking.get_booking_request_details",
             args: {
-                doctype: "Booking Request",
-                name: booking_req_id
+                booking_request: frm.doc.booking_request
             },
             callback: function(res) {
                 if (res.message) {
                     frm.clear_table("booking_details");
-                    res.message.booking_request_details.forEach(data => {
-                        if (data.status === "Open") {  
+                    res.message.forEach(data => {
+                        if (data.status === "Open") {
                             let child = frm.add_child("booking_details", {
                                 guest_name: data.guest_name,
                                 guest_phone_number: data.guest_phone_number,
@@ -145,12 +151,9 @@ frappe.ui.form.on("Booking", {
                                 pick_up_location: data.pick_up_location,
                                 drop_off_location: data.drop_off_location,
                                 trip_type: data.trip_type,
-                                reference_id: data.name
+                                reference_id: data.name,
+                                vehicle_type: data.vehicle_type
                             });
-    
-                                // set vehicle type for filter
-                                frappe.model.set_value(child.doctype, child.name, 'vehicle_type', data.vehicle_type);
-                            
                         }
                     });
                     frm.refresh_field("booking_details");
@@ -158,6 +161,9 @@ frappe.ui.form.on("Booking", {
             }
         });
     },
+
+
+    
     
     before_save(frm){
         // set calculation for Total Amount
@@ -201,7 +207,7 @@ frappe.ui.form.on('Booking Form Details', {
         });
     },
     booking_details_add:function(frm, cdt, cdn) {
-        console.log("add row=======");
+      
         setTimeout(() => {
             check_available_vehicles(frm, cdt, cdn);
         }, 1000);

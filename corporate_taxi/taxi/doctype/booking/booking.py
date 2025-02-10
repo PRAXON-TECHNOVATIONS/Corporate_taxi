@@ -7,183 +7,7 @@ from frappe.model.document import Document
 
 
 class Booking(Document):
-	# def on_update(self):
-	# 	for data in self.booking_details:
-	# 		# Check if a Vehicle History record already exists
-	# 		if not frappe.db.exists(
-	# 			"Vehicle History",
-	# 			{
-	# 				"booking_id": data.parent,
-	# 				"from_date_time": data.from_date_time,
-	# 				"to_date_time": data.to_date_time,
-	# 			}
-	# 		):
-	# 			# Create a new Vehicle History record
-	# 			doc = frappe.new_doc("Vehicle History")
-	# 			doc.booking_id = data.parent
-	# 			doc.from_date_time = data.from_date_time
-	# 			doc.to_date_time = data.to_date_time
-	# 			doc.parent = data.vehicle
-	# 			doc.parenttype = "Vehicle"
-	# 			doc.parentfield = "custom_booking_history"
-	# 			doc.insert(ignore_permissions=True)  # Use this to avoid permission issues
-	# 			# Format the dates to dd-mm-yyyy HH:MM
-	# 			from_date = datetime.strptime(str(data.from_date_time), "%Y-%m-%d %H:%M:%S").strftime("%d-%m-%Y %H:%M")
-	# 			to_date = datetime.strptime(str(data.to_date_time), "%Y-%m-%d %H:%M:%S").strftime("%d-%m-%Y %H:%M")
-
-	# 			# Show success message
-	# 			frappe.msgprint(
-	# 				f"Vehicle '{data.vehicle}' has been successfully assigned from {from_date} to {to_date}."
-	# 			)
-	# 		else:
-	# 			frappe.throw(f"Duplicate Vehicle History for booking with same date and time.")
-
-
-# second validation of vehicle assgine or not set message =======================
-    # def on_update(self):
-    #     for data in self.booking_details:
-    #         # Convert strings to datetime objects
-    #         from_date_time = datetime.strptime(data.from_date_time, "%Y-%m-%d %H:%M:%S")
-    #         to_date_time = datetime.strptime(data.to_date_time, "%Y-%m-%d %H:%M:%S")
-
-    #         # Check for overlapping Vehicle History records
-    #         overlapping_record = frappe.db.sql(
-    #             """
-    #             SELECT name FROM `tabVehicle History`
-    #             WHERE parent = %(vehicle)s
-    #             AND (
-    #                 (%(from_date_time)s BETWEEN from_date_time AND to_date_time)
-    #                 OR (%(to_date_time)s BETWEEN from_date_time AND to_date_time)
-    #                 OR (from_date_time BETWEEN %(from_date_time)s AND %(to_date_time)s)
-    #                 OR (to_date_time BETWEEN %(from_date_time)s AND %(to_date_time)s)
-    #             )
-    #             """,
-    #             {
-    #                 "vehicle": data.vehicle,
-    #                 "from_date_time": from_date_time,
-    #                 "to_date_time": to_date_time,
-    #             },
-    #         )
-
-    #         if overlapping_record:
-    #             frappe.throw(
-    #                 f"'{data.vehicle}' this vehicle already assigned given date and time."
-    #             )
-
-    #         # Create a new Vehicle History record if no overlap exists
-    #         new_doc = frappe.new_doc("Vehicle History")
-    #         new_doc.booking_id = data.parent
-    #         new_doc.from_date_time = data.from_date_time
-    #         new_doc.to_date_time = data.to_date_time
-    #         new_doc.parent = data.vehicle
-    #         new_doc.parenttype = "Vehicle"
-    #         new_doc.parentfield = "custom_booking_history"
-    #         new_doc.insert(ignore_permissions=True)
-
-    #         # Format the dates to dd-mm-yyyy HH:MM for the message
-    #         formatted_from_date = from_date_time.strftime("%d-%m-%Y %H:%M")
-    #         formatted_to_date = to_date_time.strftime("%d-%m-%Y %H:%M")
-
-    #         # Show success message
-    #         frappe.msgprint(
-    #             f"Vehicle '{data.vehicle}' has been successfully assigned from {formatted_from_date} to {formatted_to_date}."
-    #         )
-
-	# def on_update(self):
-	# 	for data in self.booking_details:
-	# 		frappe.db.set_value("Booking Request Details",data.reference_id,"status","Booked")
-
-
-
-
-	# def on_submit(self):
-	# 	all_booked = True
-	# 	partial_booked = False
-
-	# 	for data in self.booking_details:
-	# 		# Update child record status to "Booked"
-	# 		frappe.db.set_value("Booking Request Details", data.reference_id, "status", "Booked")
-
-	# 	# fetch updated statuses from child table from booking request
-	# 	child_statuses = frappe.get_all(
-	# 		"Booking Request Details", 
-	# 		filters={"parent": self.booking_request}, 
-	# 		fields=["status"]
-	# 	)
-
-	# 	# Check statuses to determine parent status
-	# 	for status_record in child_statuses:
-	# 		if status_record.status != "Booked":
-	# 			all_booked = False
-	# 			partial_booked = True
-	# 			break
-
-	# 	# Set parent status
-	# 	if all_booked:
-	# 		self.status = "Booked"
-	# 	elif partial_booked:
-	# 		self.status = "Partial Booked"
-	# 	else:
-	# 		self.status = "Open"  # Optional, if needed
-
-	# 	# Update parent record
-	# 	frappe.db.set_value("Booking Request", self.booking_request, "status", self.status)		
-
-	# 	for data in self.booking_details:
-	# 		# Convert strings to datetime objects
-	# 		from_date_time = datetime.strptime(data.from_date_time, "%Y-%m-%d %H:%M:%S")
-	# 		to_date_time = datetime.strptime(data.to_date_time, "%Y-%m-%d %H:%M:%S")
-
-	# 		# Check for overlapping records (Vehicle and Driver)
-	# 		for record_type, field, parenttype, parentfield in [
-	# 			("Vehicle", "vehicle", "Vehicle", "custom_booking_history"),
-	# 			("Vehicle", "driver", "Driver", "custom_booking_historys")
-	# 		]:
-	# 			overlapping_record = frappe.db.sql(
-	# 				f"""
-	# 				SELECT name FROM `tab{record_type} History`
-	# 				WHERE parent = %(parent)s
-	# 				AND (
-	# 					(%(from_date_time)s BETWEEN from_date_time AND to_date_time)
-	# 					OR (%(to_date_time)s BETWEEN from_date_time AND to_date_time)
-	# 					OR (from_date_time BETWEEN %(from_date_time)s AND %(to_date_time)s)
-	# 					OR (to_date_time BETWEEN %(from_date_time)s AND %(to_date_time)s)
-	# 				)
-	# 				""",
-	# 				{
-	# 					"parent": getattr(data, field),
-	# 					"from_date_time": from_date_time,
-	# 					"to_date_time": to_date_time,
-	# 				},
-	# 			)
-
-	# 			if overlapping_record:
-	# 				frappe.throw(f"'{getattr(data, field)}' this {record_type.lower()} is already assigned for the given date and time.")
-
-	# 			# Create a new record for Vehicle or Driver History
-	# 			new_doc = frappe.new_doc(f"{record_type} History")
-	# 			new_doc.booking_id = data.parent
-	# 			new_doc.from_date_time = data.from_date_time
-	# 			new_doc.to_date_time = data.to_date_time
-	# 			new_doc.parent = getattr(data, field)
-	# 			new_doc.parenttype = parenttype
-	# 			new_doc.parentfield = parentfield
-	# 			new_doc.insert(ignore_permissions=True)
-
-	# 		# Format the dates for the success message
-	# 		formatted_from_date = from_date_time.strftime("%d-%m-%Y %H:%M")
-	# 		formatted_to_date = to_date_time.strftime("%d-%m-%Y %H:%M")
-
-	# 		# Show success message
-	# 		frappe.msgprint(
-	# 			f"Vehicle '{data.vehicle}' and Driver '{data.driver}' have been successfully assigned from {formatted_from_date} to {formatted_to_date}."
-	# 		)
-
-
-
-
-
-
+	
 	def on_submit(self):
 		# Initial booking status flags
 		all_booked = True
@@ -447,3 +271,28 @@ def get_available_vehicles(vehicle_type, from_datetime, to_datetime):
     """, (vehicle_type, from_datetime, to_datetime, from_datetime, to_datetime, from_datetime, to_datetime, from_datetime, to_datetime), as_dict=True)
 
     return [vehicle['name'] for vehicle in available_vehicles]
+
+
+
+# get booking details
+@frappe.whitelist()
+def get_booking_request_details(booking_request):
+    booking_request_doc = frappe.get_doc("Booking Request", booking_request)
+    booking_details = []
+
+    for detail in booking_request_doc.booking_request_details:
+        if detail.status == "Open":
+            booking_details.append({
+                "guest_name": detail.guest_name,
+                "guest_phone_number": detail.guest_phone_number,
+                "from_date_time": detail.from_date_time,
+                "to_date_time": detail.to_date_time,
+                "pick_up_location": detail.pick_up_location,
+                "drop_off_location": detail.drop_off_location,
+                "trip_type": detail.trip_type,
+                "name": detail.name,
+                "vehicle_type": detail.vehicle_type,
+                "status": detail.status
+            })
+
+    return booking_details
