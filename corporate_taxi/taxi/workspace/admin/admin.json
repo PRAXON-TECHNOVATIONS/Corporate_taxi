@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"cHXz9hsp3p\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Admin</span>\",\"col\":12}},{\"id\":\"0rVo1zp6gU\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Booking Request\",\"col\":3}},{\"id\":\"csh6NSNvCQ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Booking\",\"col\":3}},{\"id\":\"PVM35rbj1A\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Vehicle\",\"col\":3}},{\"id\":\"BJSRxQq-_D\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Driver\",\"col\":3}},{\"id\":\"k877FrXF1_\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customer\",\"col\":3}},{\"id\":\"Q9YRkUBcQd\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Supplier\",\"col\":3}},{\"id\":\"iFV7gUBpjr\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"xm8VKRHz1o\",\"type\":\"card\",\"data\":{\"card_name\":\"Vehicle\",\"col\":4}},{\"id\":\"9evQ1zbLkF\",\"type\":\"card\",\"data\":{\"card_name\":\"Booking\",\"col\":4}}]",
+ "content": "[{\"id\":\"cHXz9hsp3p\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Admin</span>\",\"col\":12}},{\"id\":\"0rVo1zp6gU\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Booking Request\",\"col\":3}},{\"id\":\"csh6NSNvCQ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Booking\",\"col\":3}},{\"id\":\"PVM35rbj1A\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Vehicle\",\"col\":3}},{\"id\":\"BJSRxQq-_D\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Driver\",\"col\":3}},{\"id\":\"k877FrXF1_\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customer\",\"col\":3}},{\"id\":\"Q9YRkUBcQd\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Supplier\",\"col\":3}},{\"id\":\"iFV7gUBpjr\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"xm8VKRHz1o\",\"type\":\"card\",\"data\":{\"card_name\":\"Vehicle\",\"col\":4}},{\"id\":\"9evQ1zbLkF\",\"type\":\"card\",\"data\":{\"card_name\":\"Booking\",\"col\":4}},{\"id\":\"0pBgSnHoN4\",\"type\":\"card\",\"data\":{\"card_name\":\"Partner\",\"col\":4}}]",
  "creation": "2025-02-01 10:15:25.741963",
  "custom_blocks": [],
  "docstatus": 0,
@@ -9,9 +9,9 @@
  "hide_custom": 0,
  "icon": "getting-started",
  "idx": 1,
- "indicator_color": "cyan",
+ "indicator_color": "",
  "is_hidden": 0,
- "label": "Vehicle Management",
+ "label": "Admin",
  "links": [
   {
    "hidden": 0,
@@ -100,12 +100,31 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Partner",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Request for Vehicle",
+   "link_count": 0,
+   "link_to": "Request for Vehicle",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2025-02-09 16:54:19.094742",
- "modified_by": "Administrator",
+ "modified": "2025-03-02 01:35:10.702314",
+ "modified_by": "admin@gmail.com",
  "module": "taxi",
- "name": "Vehicle Management",
+ "name": "Admin",
  "number_cards": [],
  "owner": "Administrator",
  "parent_page": "",
@@ -167,5 +186,5 @@
    "type": "DocType"
   }
  ],
- "title": "Vehicle Management"
+ "title": "Admin"
 }

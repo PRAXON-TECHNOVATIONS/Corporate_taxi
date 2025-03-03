@@ -16,7 +16,7 @@
    "fieldname": "hr_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "HR Name"
+   "label": "Contact Name"
   },
   {
    "fieldname": "designation",
@@ -42,7 +42,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-01-22 22:21:29.129373",
+ "modified": "2025-02-16 16:19:21.008679",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "HR Details",

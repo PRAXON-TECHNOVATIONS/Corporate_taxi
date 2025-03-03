@@ -15,10 +15,13 @@
   "from_date_time",
   "to_date_time",
   "location_time_section",
-  "pick_up_location",
-  "drop_off_location",
-  "column_break_5fpv",
   "trip_type",
+  "sub_trip_type",
+  "column_break_5fpv",
+  "pick_up_location",
+  "location_1",
+  "location_2",
+  "drop_off_location",
   "booked_vehicle_details_section",
   "vehicle",
   "column_break_ou6j",
@@ -79,9 +82,11 @@
    "reqd": 1
   },
   {
+   "default": "Transfer",
    "fieldname": "trip_type",
-   "fieldtype": "Data",
+   "fieldtype": "Select",
    "label": "Trip Type",
+   "options": "Transfer\nInter City",
    "reqd": 1
   },
   {
@@ -200,12 +205,31 @@
   {
    "fieldname": "column_break_eivw",
    "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.trip_type == \"Inter City\"",
+   "fieldname": "sub_trip_type",
+   "fieldtype": "Select",
+   "label": "Sub Trip Type",
+   "options": "One way\nRound Trip\nMulti City"
+  },
+  {
+   "depends_on": "eval:doc.sub_trip_type == \"Multi City\"",
+   "fieldname": "location_1",
+   "fieldtype": "Data",
+   "label": "Location 1"
+  },
+  {
+   "depends_on": "eval:doc.sub_trip_type == \"Multi City\"",
+   "fieldname": "location_2",
+   "fieldtype": "Data",
+   "label": "Location 2"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-02-08 23:46:31.023480",
+ "modified": "2025-02-20 08:53:39.120099",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Booking Form Details",

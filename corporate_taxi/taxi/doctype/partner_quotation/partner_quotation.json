@@ -1,0 +1,116 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2025-02-16 17:59:12.395576",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_jk02",
+  "naming_series",
+  "partner",
+  "column_break_oyay",
+  "date",
+  "reference_request_id",
+  "booking_request",
+  "referece_id_rfv",
+  "section_break_skjg",
+  "vehicle_details",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_jk02",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Partner Quotation",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "partner",
+   "fieldtype": "Link",
+   "label": "Partner",
+   "options": "Supplier"
+  },
+  {
+   "fieldname": "column_break_oyay",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "section_break_skjg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vehicle_details",
+   "fieldtype": "Table",
+   "label": "Vehicle Details",
+   "options": "Partner Vehicle Quotation"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "PQ-.MM.-.###"
+  },
+  {
+   "fieldname": "reference_request_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Reference Request ID"
+  },
+  {
+   "fieldname": "booking_request",
+   "fieldtype": "Link",
+   "label": "Booking Request",
+   "options": "Booking Request",
+   "read_only": 1
+  },
+  {
+   "fieldname": "referece_id_rfv",
+   "fieldtype": "Link",
+   "label": "Referece ID RFV",
+   "options": "Request for Vehicle",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-02-18 07:57:30.183743",
+ "modified_by": "Administrator",
+ "module": "taxi",
+ "name": "Partner Quotation",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

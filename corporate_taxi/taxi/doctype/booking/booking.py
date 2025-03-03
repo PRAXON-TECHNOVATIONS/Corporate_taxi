@@ -31,20 +31,20 @@ class Booking(Document):
 				partial_booked = True
 				break
 
-		self.status = "Booked" if all_booked else "Partial Booked" if partial_booked else "Open"
-		frappe.db.set_value("Booking Request", self.booking_request, "status", self.status)
+		book_status = "Booked" 
+		frappe.db.set_value("Booking Request", self.booking_request, "status", book_status)
 
-		# Process each booking detail
-		for data in self.booking_details:
-			from_date_time = datetime.strptime(data.from_date_time, "%Y-%m-%d %H:%M:%S")
-			to_date_time = datetime.strptime(data.to_date_time, "%Y-%m-%d %H:%M:%S")
 
-			# Check for overlapping records and create history
-			for record_type, field, parenttype, parentfield in [
+		# for data in self.booking_details:
+		from_date_time = datetime.strptime(self.from_date_time, "%Y-%m-%d %H:%M:%S")
+		to_date_time = datetime.strptime(self.to_date_time, "%Y-%m-%d %H:%M:%S")
+
+		# Check for overlapping records and create history
+		for record_type, field, parenttype, parentfield in [
 				("Vehicle", "vehicle", "Vehicle", "custom_booking_history"),
 				("Vehicle", "driver", "Driver", "custom_booking_historys")
 			]:
-				parent_value = getattr(data, field)
+				parent_value = getattr(self, field)
 				overlapping_record = frappe.db.sql(
 					f"""
 					SELECT name FROM `tab{record_type} History`
@@ -69,9 +69,9 @@ class Booking(Document):
 				# Create history record
 				new_doc = frappe.new_doc(f"{record_type} History")
 				new_doc.update({
-					"booking_id": data.parent,
-					"from_date_time": data.from_date_time,
-					"to_date_time": data.to_date_time,
+					"booking_id": self.name,
+					"from_date_time": self.from_date_time,
+					"to_date_time": self.to_date_time,
 					"parent": parent_value,
 					"parenttype": parenttype,
 					"parentfield": parentfield,
@@ -79,33 +79,36 @@ class Booking(Document):
 				new_doc.insert(ignore_permissions=True)
 
 			# Show success message
-			frappe.msgprint(
-				f"Vehicle '{data.vehicle}' and Driver '{data.driver}' assigned from {from_date_time.strftime('%d-%m-%Y %H:%M')} to {to_date_time.strftime('%d-%m-%Y %H:%M')}."
-			)
+		frappe.msgprint(
+			f"Vehicle '{self.vehicle}' and Driver '{self.driver}' assigned from {from_date_time.strftime('%d-%m-%Y %H:%M')} to {to_date_time.strftime('%d-%m-%Y %H:%M')}."
+		)
+
+		if self.request_for_vehicle:
+			frappe.db.set_value("Request for Vehicle",self.request_for_vehicle,"status","Completed")
 
 
 
 
 
 	def on_cancel(self):
-		# Revert child records' status to "Open"
-		for data in self.booking_details:
-			frappe.db.set_value("Booking Request Details", data.reference_id, "status", "Open")
+		# # Revert child records' status to "Open"
+		# for data in self.booking_details:
+		# 	frappe.db.set_value("Booking Request Details", data.reference_id, "status", "Open")
 
-		# Check if there are any other booked details in the parent booking request
-		child_statuses = frappe.get_all(
-			"Booking Request Details",
-			filters={"parent": self.booking_request},
-			fields=["status"]
-		)
+		# # Check if there are any other booked details in the parent booking request
+		# child_statuses = frappe.get_all(
+		# 	"Booking Request Details",
+		# 	filters={"parent": self.booking_request},
+		# 	fields=["status"]
+		# )
 
-		# Determine parent booking status
-		all_open = all(status_record.status == "Open" for status_record in child_statuses)
-		partial_booked = any(status_record.status == "Booked" for status_record in child_statuses)
+		## Determine parent booking status
+		# all_open = all(status_record.status == "Open" for status_record in child_statuses)
+		# partial_booked = any(status_record.status == "Booked" for status_record in child_statuses)
 
-		# Update parent status based on child statuses
-		new_status = "Open" if all_open else "Partial Booked" if partial_booked else "Booked"
-		frappe.db.set_value("Booking Request", self.booking_request, "status", new_status)
+		# # Update parent status based on child statuses
+		book_status = "Open" 
+		frappe.db.set_value("Booking Request", self.booking_request, "status", book_status)
 
 		# Function to delete history records
 		def delete_history(booking_id, parent_value, record_type):
@@ -124,13 +127,16 @@ class Booking(Document):
 				frappe.delete_doc(f"{record_type} History", record.name, ignore_permissions=True)
 
 		# Delete related history records and show cancellation message
-		for data in self.booking_details:
-			delete_history(data.parent, data.vehicle, "Vehicle")
-			delete_history(data.parent, data.driver, "Vehicle")
+		
+		delete_history(self.name, self.vehicle, "Vehicle")
+		delete_history(self.name, self.driver, "Vehicle")
 
-			frappe.msgprint(
-				f"Booking for Vehicle '{data.vehicle}' and Driver '{data.driver}' has been successfully canceled."
-			)
+		frappe.msgprint(
+			f"Booking for Vehicle '{self.vehicle}' and Driver '{self.driver}' has been successfully canceled."
+		)
+
+		if self.request_for_vehicle:
+			frappe.db.set_value("Request for Vehicle",self.request_for_vehicle,"status","Approved")
 
 
 
@@ -250,25 +256,49 @@ def get_available_drivers(vehicle, from_datetime, to_datetime):
 
 
 
+# @frappe.whitelist()
+# def get_available_vehicles(vehicle_type, from_datetime, to_datetime):
+#     available_vehicles = frappe.db.sql("""
+#         SELECT name 
+#         FROM `tabVehicle`
+#         WHERE custom_vehicle_type = %s
+#         AND name NOT IN (
+#             SELECT parent 
+#             FROM `tabVehicle History` 
+#             WHERE (
+#                 (%s BETWEEN from_date_time AND to_date_time)
+#                 OR (%s BETWEEN from_date_time AND to_date_time)
+#                 OR (from_date_time BETWEEN %s AND %s)
+#                 OR (to_date_time BETWEEN %s AND %s)
+#                 OR (from_date_time <= %s AND to_date_time >= %s)
+#             )
+           
+#         )
+#     """, (vehicle_type, from_datetime, to_datetime, from_datetime, to_datetime, from_datetime, to_datetime, from_datetime, to_datetime), as_dict=True)
+
+#     return [vehicle['name'] for vehicle in available_vehicles]
+
+
 @frappe.whitelist()
 def get_available_vehicles(vehicle_type, from_datetime, to_datetime):
     available_vehicles = frappe.db.sql("""
-        SELECT name 
-        FROM `tabVehicle`
-        WHERE custom_vehicle_type = %s
-        AND name NOT IN (
-            SELECT parent 
-            FROM `tabVehicle History` 
-            WHERE (
-                (%s BETWEEN from_date_time AND to_date_time)
-                OR (%s BETWEEN from_date_time AND to_date_time)
-                OR (from_date_time BETWEEN %s AND %s)
-                OR (to_date_time BETWEEN %s AND %s)
-                OR (from_date_time <= %s AND to_date_time >= %s)
-            )
-           
+        SELECT v.name 
+        FROM `tabVehicle` v
+        LEFT JOIN `tabVehicle History` vh ON v.name = vh.parent
+        AND (
+            (%s BETWEEN vh.from_date_time AND vh.to_date_time)
+            OR (%s BETWEEN vh.from_date_time AND vh.to_date_time)
+            OR (vh.from_date_time BETWEEN %s AND %s)
+            OR (vh.to_date_time BETWEEN %s AND %s)
+            OR (vh.from_date_time <= %s AND vh.to_date_time >= %s)
         )
-    """, (vehicle_type, from_datetime, to_datetime, from_datetime, to_datetime, from_datetime, to_datetime, from_datetime, to_datetime), as_dict=True)
+        WHERE v.custom_vehicle_type = %s
+        AND vh.parent IS NULL
+    """, (
+        from_datetime, to_datetime, from_datetime, to_datetime, 
+        from_datetime, to_datetime, from_datetime, to_datetime, 
+        vehicle_type
+    ), as_dict=True)
 
     return [vehicle['name'] for vehicle in available_vehicles]
 
@@ -296,3 +326,8 @@ def get_booking_request_details(booking_request):
             })
 
     return booking_details
+
+
+@frappe.whitelist()
+def get_booking_request(booking_request):
+	return frappe.get_doc("Booking Request", booking_request)

@@ -16,12 +16,13 @@ class DriverTrip(Document):
    def on_submit(self):
     self.status = "Completed"  # Set status as Completed
     self.trip_end = now()       # Set current time in trip_end field
+    frappe.db.set_value("Booking", self.booking, "trip_status", "Trip Completed")
 
     # Update status in Booking Form Details
-    if self.table_wupe:
-        for data in self.table_wupe:
-            if data.reference_id:
-                frappe.db.set_value("Booking Form Details", data.reference_id, "status", "Trip Completed")
+    # if self.table_wupe:
+    #     for data in self.table_wupe:
+    #         if data.reference_id:
+    #             frappe.db.set_value("Booking Form Details", data.reference_id, "status", "Trip Completed")
 
     # Grouping data by duty_type
     grouped_data = {}
@@ -52,56 +53,86 @@ class DriverTrip(Document):
             grouped_data[key]["amount"] += wupe_data.get("amount", 0)
 
     # Adding additional_charges if present
-    if self.additional_charges:
-        for wupe_data, charge_data in zip(self.table_wupe, self.additional_charges):
-            duty_type = wupe_data.get("duty_type")
-            if duty_type not in grouped_data:
-                continue
+    # if self.additional_charges:
+    #     for wupe_data, charge_data in zip(self.table_wupe, self.additional_charges):
+    #         duty_type = wupe_data.get("duty_type")
+    #         if duty_type not in grouped_data:
+    #             continue
 
-            grouped_data[duty_type]["charges_type"] = charge_data.get("charges_type") or "N/A"
-            grouped_data[duty_type]["extra_kmhour"] += charge_data.get("extra_kmhour", 0)
-            grouped_data[duty_type]["price_per_kmhour"] = charge_data.get("price_per_kmhour", 0)
-            grouped_data[duty_type]["total_extra_charges"] += charge_data.get("total_extra_charges", 0)
+    #         grouped_data[duty_type]["charges_type"] = charge_data.get("charges_type") or "N/A"
+    #         grouped_data[duty_type]["extra_kmhour"] += charge_data.get("extra_kmhour", 0)
+    #         grouped_data[duty_type]["price_per_kmhour"] = charge_data.get("price_per_kmhour", 0)
+    #         grouped_data[duty_type]["total_extra_charges"] += charge_data.get("total_extra_charges", 0)
 
-    # Create or update Trip History and update Booking form
-    for merged_record in grouped_data.values():
-        create_or_update_trip_history(self, merged_record)
 
-        if merged_record.get("reference_id"):
-            booking_doc = frappe.get_doc("Booking", self.booking)
+    # # Create or update Trip History and update Booking form
+    # for merged_record in grouped_data.values():
+    #     create_or_update_trip_history(self, merged_record)
 
-            # Function to update or append extra_charges
-            def update_or_append(charges_type, price):
-                if charges_type:  # Only update or append if charges_type exists
-                    existing_row = next(
-                        (charge for charge in booking_doc.extra_charges if charge.charges_type == charges_type),
-                        None
-                    )
+    #     if merged_record.get("reference_id"):
+    #         booking_doc = frappe.get_doc("Booking", self.booking)
 
-                    if existing_row:
+    #         # Function to update or append extra_charges
+    #         def update_or_append(charges_type, price):
+    #             if charges_type:  # Only update or append if charges_type exists
+    #                 existing_row = next(
+    #                     (charge for charge in booking_doc.extra_charges if charge.charges_type == charges_type),
+    #                     None
+    #                 )
+
+    #                 if existing_row:
                         
-                        existing_row.price += price
-                    else:
+    #                     existing_row.price += price
+    #                 else:
                         
-                        booking_doc.append("extra_charges", {
-                            "charges_type": charges_type,
-                            "price": price
-                        })
+    #                     booking_doc.append("extra_charges", {
+    #                         "charges_type": charges_type,
+    #                         "price": price
+    #                     })
 
             
-            update_or_append(merged_record.get("duty_type"), merged_record.get("amount"))
+    #         update_or_append(merged_record.get("duty_type"), merged_record.get("amount"))
 
             
-            update_or_append(merged_record.get("charges_type"), merged_record.get("total_extra_charges"))
+    #         update_or_append(merged_record.get("charges_type"), merged_record.get("total_extra_charges"))
 
-            # Recalculate the sum of the price column in extra_charges
-            total_price = sum(charge.price for charge in booking_doc.extra_charges)
+    #         # Recalculate the sum of the price column in extra_charges
+    #         total_price = sum(charge.price for charge in booking_doc.extra_charges)
 
-            # Update the total sum field (you may need to add a field for this if it doesn't exist)
-            booking_doc.total_amount_with_extra_charges = total_price
+    #         # Update the total sum field (you may need to add a field for this if it doesn't exist)
+    #         booking_doc.total_amount_with_extra_charges = total_price
 
-            booking_doc.save(ignore_permissions = True)
+    #         booking_doc.save(ignore_permissions = True)
 
+    if not self.additional_charges:
+            return
+    duty_type = self.get("duty_type")
+    amount = self.get("amount", 0)
+
+    if not duty_type:
+        return  # No valid duty_type, exit function
+    
+    booking_doc = frappe.get_doc("Booking", self.booking)
+
+    for charge_data in self.additional_charges:
+        charges_type = charge_data.get("charges_type") or "N/A"
+        total_extra_charges = charge_data.get("total_extra_charges", 0)
+        
+    booking_doc.append("extra_charges_details", {
+         "extra_charges_type": charges_type,
+         "price": total_extra_charges
+     })
+
+    
+    booking_doc.append("extra_charges_details", {
+        "extra_charges_type": duty_type,
+        "price": amount
+    })
+
+    # Recalculate total amount with extra charges
+    booking_doc.total_amount_with_extra_charges = sum(charge.price for charge in booking_doc.extra_charges_details)
+
+    booking_doc.save(ignore_permissions=True)
     frappe.db.commit()
 
 
@@ -114,10 +145,13 @@ class DriverTrip(Document):
             fields=["name"]
         )
 
-        # Update status in Booking Form Details
-        for data in self.table_wupe:
-            if data.reference_id:
-                frappe.db.set_value("Booking Form Details", data.reference_id, "status", "Open")
+        # # Update status in Booking Form Details
+        # for data in self.table_wupe:
+        #     if data.reference_id:
+        #         frappe.db.set_value("Booking Form Details", data.reference_id, "status", "Open")
+
+        frappe.db.set_value("Booking", self.booking, "trip_status", "Open")
+
 
         # Delete Trip History records
         for trip in trip_histories:
@@ -140,34 +174,83 @@ class DriverTrip(Document):
 
                 booking_doc.save()
 
-        # Subtract price in extra_charges table for each item
-        if self.table_wupe:
-            for wupe_data in self.table_wupe:
-                duty_type = wupe_data.get("duty_type")
-                amount = wupe_data.get("amount", 0)
+        # # Subtract price in extra_charges table for each item
+        # if self.table_wupe:
+        #     for wupe_data in self.table_wupe:
+        #         duty_type = wupe_data.get("duty_type")
+        #         amount = wupe_data.get("amount", 0)
 
-                # Subtract for duty_type
-                subtract_or_delete(duty_type, amount)
+        #         # Subtract for duty_type
+        #         subtract_or_delete(duty_type, amount)
 
-        if self.additional_charges:
-            for charge_data in self.additional_charges:
-                charges_type = charge_data.get("charges_type")
-                price_per_kmhour = charge_data.get("total_extra_charges", 0)
+        # if self.additional_charges:
+        #     for charge_data in self.additional_charges:
+        #         charges_type = charge_data.get("charges_type")
+        #         price_per_kmhour = charge_data.get("total_extra_charges", 0)
 
-                # Subtract for charges_type
-                subtract_or_delete(charges_type, price_per_kmhour)
+        #         # Subtract for charges_type
+        #         subtract_or_delete(charges_type, price_per_kmhour)
 
-         # Recalculate the sum of the price column in extra_charges
+        #  # Recalculate the sum of the price column in extra_charges
+        # booking_doc = frappe.get_doc("Booking", self.booking)
+        # total_price = sum(charge.price for charge in booking_doc.extra_charges)
+
+        # # Update the total sum field (you may need to add a field for this if it doesn't exist)
+        # booking_doc.total_amount_with_extra_charges = total_price
+
+        # # Save the updated booking document
+        # booking_doc.save()
+
+
+        if not self.booking:
+            return
+
         booking_doc = frappe.get_doc("Booking", self.booking)
-        total_price = sum(charge.price for charge in booking_doc.extra_charges)
 
-        # Update the total sum field (you may need to add a field for this if it doesn't exist)
-        booking_doc.total_amount_with_extra_charges = total_price
+        # Identify charges that were added from this document
+        reference_name = self.name  # Use self.name as reference ID
 
-        # Save the updated booking document
-        booking_doc.save()
+        # Filter out the charges added by this document
+        booking_doc.extra_charges = [
+            charge for charge in booking_doc.extra_charges if charge.get("reference_id") != reference_name
+        ]
 
+        # Recalculate total after deletion
+        booking_doc.total_amount_with_extra_charges = sum(charge.price for charge in booking_doc.extra_charges)
+
+        # Save the Booking document
+        booking_doc.save(ignore_permissions=True)
         frappe.db.commit()
+
+
+
+# @frappe.whitelist()
+# def get_setted_driver_booking_id(driver):
+#     if not driver:
+#         return []
+
+    
+#     approved_bookings = frappe.get_all(
+#         "Booking",
+#         filters={"docstatus": 1},
+#         pluck="name"  # This returns a list of booking names
+#     )
+
+#     # Step 2: Get Booking Form Details where driver matches, status is 'Open', and parent is in the approved bookings
+#     booking_id = frappe.get_all(
+#         "Booking Form Details",
+#         filters={
+#             "driver": driver,
+#             "status": "Open",
+#             "parent": ["in", approved_bookings]
+#         },
+#         fields=["parent"]
+#     )
+
+
+#     return booking_id
+
+
 
 
 @frappe.whitelist()
@@ -175,32 +258,21 @@ def get_setted_driver_booking_id(driver):
     if not driver:
         return []
 
-    # Fetch the booking id linked to the selected driver in booking form
-    # booking_id = frappe.db.get_all(
-    #     "Booking Form Details",
-    #     filters={"driver": driver,"status":"Open"},
-    #     fields=["parent"]
-    # )
-    # Step 1: Get all Booking documents with docstatus = 1
+    
     approved_bookings = frappe.get_all(
-        "Booking",
-        filters={"docstatus": 1},
-        pluck="name"  # This returns a list of booking names
-    )
-
-    # Step 2: Get Booking Form Details where driver matches, status is 'Open', and parent is in the approved bookings
-    booking_id = frappe.get_all(
-        "Booking Form Details",
-        filters={
-            "driver": driver,
-            "status": "Open",
-            "parent": ["in", approved_bookings]
-        },
-        fields=["parent"]
-    )
+            "Booking",
+            filters={
+                "docstatus": 1,
+                "trip_status": "Open",
+                "driver": driver  # Ensure 'driver' variable holds the correct driver value
+            },
+            pluck="name"  # This returns a list of booking names
+        )
 
 
-    return booking_id
+    print(approved_bookings)
+    print("\n\n\n\n\n\n\n\n\n")
+    return approved_bookings
 
 
 

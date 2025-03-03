@@ -108,14 +108,18 @@ frappe.ui.form.on("Driver Trip", {
             callback: function(r) {
                 console.log(r);
                 if (r.message) {
-                    let booking_list = r.message.map(item => item.parent);
                     
                    frm.set_query('booking', function() {
                         return {
-                            filters: { name: ['in', booking_list] }
+                            filters: { name: ['in', r.message] }
                         };
                     });
+
                 }
+
+                setTimeout(() => {
+                    
+                }, 500);
             },
         });
         

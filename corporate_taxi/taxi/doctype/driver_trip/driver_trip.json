@@ -17,9 +17,23 @@
   "trip_end",
   "otp",
   "status",
+  "booking_details_section",
+  "guest_name",
+  "guest_phone_number",
+  "duty_type",
+  "amount",
+  "column_break_gjpa",
+  "trip_type",
+  "sub_trip_type",
+  "pick_up_location",
+  "location_1",
+  "location_2",
+  "drop_off_location",
   "section_break_usyc",
+  "column_break_ytlj",
   "table_wupe",
   "section_break_lwdv",
+  "column_break_dpfc",
   "additional_charges"
  ],
  "fields": [
@@ -88,6 +102,7 @@
   {
    "fieldname": "table_wupe",
    "fieldtype": "Table",
+   "hidden": 1,
    "options": "Driver Trip Details"
   },
   {
@@ -113,12 +128,95 @@
    "fieldtype": "Table",
    "label": "Additional Charges",
    "options": "Additional Charges"
+  },
+  {
+   "fieldname": "booking_details_section",
+   "fieldtype": "Section Break",
+   "label": "Booking Details"
+  },
+  {
+   "fetch_from": "booking.guest_name",
+   "fieldname": "guest_name",
+   "fieldtype": "Data",
+   "label": "Guest Name"
+  },
+  {
+   "fetch_from": "booking.guest_phone_number",
+   "fieldname": "guest_phone_number",
+   "fieldtype": "Phone",
+   "label": "Guest Phone Number"
+  },
+  {
+   "fieldname": "column_break_gjpa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "trip_type",
+   "fieldtype": "Select",
+   "label": "Trip Type",
+   "options": "Transfer\nInter City"
+  },
+  {
+   "fetch_from": "booking.sub_trip_type",
+   "fieldname": "sub_trip_type",
+   "fieldtype": "Select",
+   "label": "Sub Trip Type",
+   "options": "One way\nRound Trip\nMulti City"
+  },
+  {
+   "fetch_from": "booking.pick_up_location",
+   "fieldname": "pick_up_location",
+   "fieldtype": "Data",
+   "label": "Pick Up Location"
+  },
+  {
+   "depends_on": "sub_trip_type == \"Multi City\"",
+   "fetch_from": "booking.location_1",
+   "fieldname": "location_1",
+   "fieldtype": "Data",
+   "label": "Location 1"
+  },
+  {
+   "depends_on": "sub_trip_type == \"Multi City\"",
+   "fetch_from": "booking.location_2",
+   "fieldname": "location_2",
+   "fieldtype": "Data",
+   "label": "Location 2"
+  },
+  {
+   "fetch_from": "booking.drop_off_location",
+   "fieldname": "drop_off_location",
+   "fieldtype": "Data",
+   "label": "Drop off Location"
+  },
+  {
+   "fetch_from": "booking.duty_type",
+   "fieldname": "duty_type",
+   "fieldtype": "Link",
+   "label": "Duty Type",
+   "link_filters": "[[\"Item\",\"item_group\",\"=\",\"Duty Type\"]]",
+   "options": "Item"
+  },
+  {
+   "fetch_from": "booking.amount",
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "fieldname": "column_break_dpfc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ytlj",
+   "fieldtype": "Column Break",
+   "hidden": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-08 23:28:32.409180",
+ "modified": "2025-03-01 12:01:17.037127",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Driver Trip",

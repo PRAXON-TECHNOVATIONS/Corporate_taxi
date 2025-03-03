@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"QD_vqyZu_Z\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Customer Desk</span>\",\"col\":12}},{\"id\":\"kpiB0DRRD-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Booking Request\",\"col\":3}},{\"id\":\"b5C_cRGJYM\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Booking\",\"col\":3}},{\"id\":\"kZzM2sI11k\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Driver Trip\",\"col\":3}},{\"id\":\"8s-3IDojzc\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Invoice\",\"col\":3}}]",
+ "content": "[{\"id\":\"QD_vqyZu_Z\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Customer Desk</span>\",\"col\":12}},{\"id\":\"xza-vhYaaK\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Completed Bookings\",\"col\":4}},{\"id\":\"BVwRszJJd4\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"kpiB0DRRD-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Booking Request\",\"col\":3}},{\"id\":\"b5C_cRGJYM\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Booking\",\"col\":3}},{\"id\":\"kZzM2sI11k\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Driver Trip\",\"col\":3}},{\"id\":\"8s-3IDojzc\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Invoice\",\"col\":3}}]",
  "creation": "2025-02-08 22:42:16.330522",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,11 +13,16 @@
  "is_hidden": 0,
  "label": "Customer Desk",
  "links": [],
- "modified": "2025-02-09 15:49:23.124549",
+ "modified": "2025-03-03 23:05:10.115552",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Customer Desk",
- "number_cards": [],
+ "number_cards": [
+  {
+   "label": "Completed Bookings",
+   "number_card_name": "Completed Bookings"
+  }
+ ],
  "owner": "Administrator",
  "parent_page": "",
  "public": 1,

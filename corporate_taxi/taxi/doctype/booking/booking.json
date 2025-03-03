@@ -15,7 +15,35 @@
   "column_break_347v",
   "booking_date",
   "status",
+  "trip_status",
+  "request_for_vehicle",
   "booking_details_section",
+  "guest_name",
+  "guest_phone_number",
+  "column_break_lmxx",
+  "vehicle_type",
+  "from_date_time",
+  "to_date_time",
+  "column_break_qwnq",
+  "trip_type",
+  "sub_trip_type",
+  "pick_up_location",
+  "location_1",
+  "location_2",
+  "drop_off_location",
+  "vehicle_and_driver_details_section",
+  "vehicle",
+  "vehicle_number",
+  "vehicle_color",
+  "column_break_hqpb",
+  "driver",
+  "driver_user_id",
+  "driver_phone_number",
+  "column_break_unap",
+  "duty_type",
+  "amount",
+  "section_break_hjsu",
+  "column_break_hiym",
   "booking_details",
   "section_break_bxsj",
   "extra_charges",
@@ -93,6 +121,7 @@
    "read_only": 1
   },
   {
+   "default": "To Bill",
    "depends_on": "eval:doc.docstatus == 1",
    "fieldname": "status",
    "fieldtype": "Select",
@@ -163,10 +192,186 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "extra_charges_details",
    "fieldtype": "Table",
    "label": "Extra Charges Details",
    "options": "Extra Charges Details"
+  },
+  {
+   "fetch_from": "booking_request.guest_phone_number",
+   "fieldname": "guest_phone_number",
+   "fieldtype": "Phone",
+   "label": "Guest Phone Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "trip_status",
+   "fieldtype": "Select",
+   "label": "Trip Status",
+   "options": "Open\nTrip Completed"
+  },
+  {
+   "fieldname": "section_break_hjsu",
+   "fieldtype": "Section Break",
+   "hidden": 1
+  },
+  {
+   "fieldname": "column_break_lmxx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "booking_request.vehicle_type",
+   "fieldname": "vehicle_type",
+   "fieldtype": "Link",
+   "label": "Vehicle Type",
+   "options": "Vehicle Type",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "booking_request.from_date_time",
+   "fetch_if_empty": 1,
+   "fieldname": "from_date_time",
+   "fieldtype": "Datetime",
+   "label": "From Date & Time",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "booking_request.to_date_time",
+   "fetch_if_empty": 1,
+   "fieldname": "to_date_time",
+   "fieldtype": "Datetime",
+   "label": "To Date & Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_qwnq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "booking_request.trip_type",
+   "fieldname": "trip_type",
+   "fieldtype": "Select",
+   "label": "Trip Type",
+   "options": "Transfer\nInter City",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sub_trip_type",
+   "fieldtype": "Select",
+   "label": "Sub Trip Type",
+   "options": "One way\nRound Trip\nMulti City"
+  },
+  {
+   "fetch_from": "booking_request.pick_up_location",
+   "fieldname": "pick_up_location",
+   "fieldtype": "Data",
+   "label": "Pick Up Location",
+   "reqd": 1
+  },
+  {
+   "depends_on": "sub_trip_type == \"Multi City\"",
+   "fieldname": "location_1",
+   "fieldtype": "Data",
+   "label": "Location 1"
+  },
+  {
+   "depends_on": "eval:doc.sub_trip_type == \"Multi City\"",
+   "fieldname": "location_2",
+   "fieldtype": "Data",
+   "label": "Location 2"
+  },
+  {
+   "fetch_from": "booking_request.drop_off_location",
+   "fieldname": "drop_off_location",
+   "fieldtype": "Data",
+   "label": "Drop off Location",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vehicle_and_driver_details_section",
+   "fieldtype": "Section Break",
+   "label": "Vehicle and Driver Details"
+  },
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "label": "Vehicle",
+   "options": "Vehicle",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vehicle.license_plate",
+   "fieldname": "vehicle_number",
+   "fieldtype": "Data",
+   "label": "Vehicle Number"
+  },
+  {
+   "fetch_from": "vehicle.color",
+   "fieldname": "vehicle_color",
+   "fieldtype": "Data",
+   "label": "Vehicle Color"
+  },
+  {
+   "fieldname": "column_break_hqpb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "driver",
+   "fieldtype": "Link",
+   "label": "Driver",
+   "options": "Driver",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "driver.custom_user",
+   "fieldname": "driver_user_id",
+   "fieldtype": "Link",
+   "label": "Driver User ID",
+   "options": "User"
+  },
+  {
+   "fetch_from": "driver.cell_number",
+   "fieldname": "driver_phone_number",
+   "fieldtype": "Data",
+   "label": "Driver Phone Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "duty_type",
+   "fieldtype": "Link",
+   "label": "Duty Type",
+   "link_filters": "[[\"Item\",\"item_group\",\"=\",\"Duty Type\"]]",
+   "options": "Item"
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "Amount",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_unap",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "booking_request.guest_name",
+   "fieldname": "guest_name",
+   "fieldtype": "Data",
+   "label": "Guest Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_hiym",
+   "fieldtype": "Column Break",
+   "hidden": 1
+  },
+  {
+   "fieldname": "request_for_vehicle",
+   "fieldtype": "Link",
+   "label": "Request for Vehicle",
+   "options": "Request for Vehicle",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -177,7 +382,7 @@
    "link_fieldname": "booking"
   }
  ],
- "modified": "2025-02-09 16:05:43.677370",
+ "modified": "2025-03-02 01:17:02.843775",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Booking",
