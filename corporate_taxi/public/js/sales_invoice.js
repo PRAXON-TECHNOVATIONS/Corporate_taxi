@@ -2,10 +2,20 @@
 
 
 frappe.ui.form.on('Sales Invoice', {
+    onload(frm){
+        setTimeout(() => {
+            frm.remove_custom_button("Timesheet","Get Items From")
+            frm.remove_custom_button("Sales Order","Get Items From")
+            frm.remove_custom_button("Delivery Note","Get Items From")
+            frm.remove_custom_button("Quotation","Get Items From")
+    
+           }, 500);
+    },
     refresh(frm) {
        
+     
 
-        frm.add_custom_button(__('Create Invoice'), function () {
+        frm.add_custom_button(__('Get Booking'), function () {
             frappe.db.get_list('Booking', {
                 fields: ['name', 'customer'],
                 filters: { docstatus: 1, customer: frm.doc.customer }
@@ -22,7 +32,7 @@ frappe.ui.form.on('Sales Invoice', {
                     get_query: () => ({ 
                         filters: { 
                             docstatus: 1, 
-                            billing_status: "To Bill"  
+                            status: "To Bill"  
                         } 
                     }),
                     action(selections) {
@@ -59,6 +69,6 @@ frappe.ui.form.on('Sales Invoice', {
                     }
                 });
             });
-        }, __("Actions"));
+        },);
     }
 });
