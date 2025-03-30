@@ -1,30 +1,43 @@
 
 
 
-var OLA_API_KEY = frappe.db.get_single_value('Map Setting', 'api_key');
+var OLA_API_KEY
 var myMap, olaMaps;
 var startMarker = null, endMarker = null;
 var startCoords = null, endCoords = null;
 var pick_up, drop_off;
 
 $(document).ready(function () {
-    function getQueryParam(name) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(name);
-    }
-
-    pick_up = getQueryParam('pick_up');
-    drop_off = getQueryParam('drop_off');
-
-    $.getScript("https://www.unpkg.com/olamaps-web-sdk@latest/dist/olamaps-web-sdk.umd.js", function () {
-        initializeMap();
+    frappe.call({
+        method: "corporate_taxi.override.auth.get_api_key",  // Adjust the path as per your app structure
+        callback: function(response) {
+            if (response.message) {
+                console.log("API Key:", response.message);
+                OLA_API_KEY = response.message
+                function getQueryParam(name) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    return urlParams.get(name);
+                }
+            
+                pick_up = getQueryParam('pick_up');
+                drop_off = getQueryParam('drop_off');
+            
+                $.getScript("https://www.unpkg.com/olamaps-web-sdk@latest/dist/olamaps-web-sdk.umd.js", function () {
+                    initializeMap();
+                });
+            } else {
+                console.warn("API Key not found.");
+            }
+        }
     });
+
+    
+    
 });
 
 function initializeMap() {
     if (!OLA_API_KEY) {
         console.error("Ola API Key is missing!");
-        alert("Ola API Key is required for the map to function.");
         return;
     }
     
@@ -120,8 +133,7 @@ async function drawRoute() {
 }
 
 function decodePolyline(polyline) {
-    console.log(polyline);
-    console.log("testttttttt========================");
+    // dwaw line between locations
     let index = 0, len = polyline.length;
     let lat = 0, lng = 0;
     const coordinates = [];
