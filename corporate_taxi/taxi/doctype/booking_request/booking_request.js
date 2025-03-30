@@ -111,29 +111,33 @@ function attachOlaAutocomplete(frm, fields) {
     });
 }
 
-async function fetchOlaPlaceDetails(inputValue, callback) {
+function fetchOlaPlaceDetails(inputValue, callback) {
     if (!inputValue) return;
 
-    const apiKey = frappe.db.get_single_value('Map Setting', 'api_key')    // Load API key securely from backend
-    const url = `https://api.olamaps.io/places/v1/autocomplete?input=${encodeURIComponent(inputValue)}&api_key=${apiKey}`;
+    frappe.db.get_single_value('Map Setting', 'api_key')
+        .then(apiKey => {
+            
+            const url = `https://api.olamaps.io/places/v1/autocomplete?input=${encodeURIComponent(inputValue)}&api_key=${apiKey}`;
 
-    try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+            return fetch(url);
+        })
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+            return response.json();
+        })
+        .then(result => {
+            console.log('API Response:', result);
 
-        const result = await response.json();
-        console.log('API Response:', result);
-
-        if (result && result.predictions) {
-            callback(result.predictions);
-        } else {
-            frappe.msgprint(__('No data found for the entered location.'));
+            if (result && result.predictions) {
+                callback(result.predictions);
+            } else {
+                frappe.msgprint(__('No data found for the entered location.'));
+                callback([]);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching place details:', error);
+            frappe.msgprint(__('Failed to fetch place details. Please try again later.'));
             callback([]);
-        }
-    } catch (error) {
-        console.error('Error fetching place details:', error);
-        frappe.msgprint(__('Failed to fetch place details. Please try again later.'));
-        callback([]);
-    }
+        });
 }
-
