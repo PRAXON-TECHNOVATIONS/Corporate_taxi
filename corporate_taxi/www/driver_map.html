@@ -1,0 +1,25 @@
+{% extends "templates/web.html" %}
+
+{% block page_content %}
+<!-- <h2>Ola Maps - Autocomplete & Routing</h2>
+
+<div class="search-container">
+    <input type="text" id="start-location" placeholder="Enter start location">
+    <div id="start-autocomplete" class="autocomplete-list"></div>
+</div>
+
+<div class="search-container">
+    <input type="text" id="end-location" placeholder="Enter destination">
+    <div id="end-autocomplete" class="autocomplete-list"></div>
+</div>
+
+<button id="set-route-btn">Set Route</button> -->
+<div id="map" style="width: 100%; height: 650px; margin-top: 10px;"></div>
+
+<!-- Include jQuery (Latest Version) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Load Your Custom JS -->
+<script src="{{ '/assets/corporate_taxi/js/live_tracking.js' | abs_url }}"></script>
+
+{% endblock %}

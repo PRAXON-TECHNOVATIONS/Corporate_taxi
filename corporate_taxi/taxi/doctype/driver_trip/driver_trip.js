@@ -6,45 +6,7 @@ frappe.ui.form.on("Driver Trip", {
      status: function(frm) {
         update_form_title(frm);
     },
-    // onload: function(frm) {
-        
-    //     // Fetch the User document for the current logged-in user
-    //     frappe.call({
-    //         method: 'frappe.client.get',
-    //         args: {
-    //             doctype: 'User',
-    //             name: frappe.session.user
-    //         },
-    //         callback: function(response) {
-                
-    //             if (response.message) {
-    //                 // Check if the role profile name is "Driver"
-    //                 let roleprofile_name = response.message.role_profile_name;
-    //                     console.log(roleprofile_name);
-    //                 if (roleprofile_name === 'Driver') {
-    //                      frappe.call({
-    //                         method: 'frappe.client.get_list',
-    //                         args: {
-    //                             doctype: 'Driver',
-    //                             filters: {
-    //                                 custom_user: frappe.session.user
-    //                             },
-    //                             fields: ['name', 'custom_user'] 
-    //                         },
-    //                         callback: function(driverResponse) {
-    //                             console.log(driverResponse);
-    //                             if (driverResponse.message && driverResponse.message.length > 0) {
-    //                                 let driver = driverResponse.message[0].name; 
-    //                                 frm.set_value('driver_id', driver);  
-    //                             }
-    //                         }
-    //                     });
-    //                 }
-    //             }
-    //         }
-    //     });
-    // },
-
+    
 
     onload: function(frm) {
         frappe.call({
@@ -55,6 +17,15 @@ frappe.ui.form.on("Driver Trip", {
                 }
             }
         });
+    },
+    refresh:function(frm){
+        view_map(frm)
+    },
+    start_km:function(frm){
+        calckm(frm)
+    },
+    end_km:function(frm){
+        calckm(frm)
     },
 
     before_submit(frm){
@@ -164,7 +135,34 @@ frappe.ui.form.on('Additional Charges', {
 
     // Function to update the form title by appending the status
     function update_form_title(frm) {
-        let status = frm.doc.status || 'Start'; // Default to 'Start' if status is not set
-        let base_title = frm.doc.name; // Use the document name as the base title
+        let status = frm.doc.status || 'Start'; 
+        let base_title = frm.doc.name; 
         frm.set_title(`${base_title} - ${status}`);
     }
+
+
+    function calckm(frm){
+        var start_km = frm.doc.start_km
+        var end_km = frm.doc.end_km
+
+        if(start_km && end_km)
+        {
+            total = end_km - start_km
+            frm.set_value("total_km",total)
+        }
+    }
+
+
+    function view_map(frm) {
+        frm.add_custom_button(__('View Map'), function() {
+            if (frm.doc.pick_up_location && frm.doc.drop_off_location) {
+                let url = `/driver_map?pick_up=${encodeURIComponent(frm.doc.pick_up_location_place_id)}&drop_off=${encodeURIComponent(frm.doc.drop_off_location_place_id)}`;
+                window.open(url, '_blank');
+            } else {
+                frappe.msgprint(__('Please select both Pick-up and Drop-off locations.'));
+            }
+        }).addClass('btn-primary');
+
+        
+    }
+    

@@ -41,14 +41,13 @@
    "fieldname": "total_extra_charges",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Total Extra Charges",
-   "read_only": 1
+   "label": "Total Extra Charges"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-02-02 17:07:07.637286",
+ "modified": "2025-03-28 22:22:37.219531",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Additional Charges",

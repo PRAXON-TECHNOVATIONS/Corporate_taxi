@@ -1,0 +1,337 @@
+// var OLA_API_KEY = "PEWIkW6LvWQXNajUDL8HML16QNfZlkOE2RiVdAgD";
+// var myMap, olaMaps;
+// var startMarker = null, endMarker = null;
+// var startCoords = null, endCoords = null;
+// var pick_up
+// var drop_off
+
+// $(document).ready(function () {
+//     function getQueryParam(name) {
+//         const urlParams = new URLSearchParams(window.location.search);
+//         return urlParams.get(name);
+//     }
+
+//     // Get the pick-up and drop-off locations from URL
+//     pick_up = getQueryParam('pick_up');
+//     drop_off = getQueryParam('pick_up');
+   
+//     $.getScript("https://www.unpkg.com/olamaps-web-sdk@latest/dist/olamaps-web-sdk.umd.js", function () {
+//         initializeMap();
+//     });
+// });
+
+// function initializeMap() {
+//     if (!OLA_API_KEY) {
+//         console.error("Ola API Key is missing!");
+//         alert("Ola API Key is required for the map to function.");
+//         return;
+//     }
+//     olaMaps = new OlaMaps({ apiKey: OLA_API_KEY });
+//     myMap = olaMaps.init({
+//         style: "https://api.olamaps.io/tiles/vector/v1/styles/default-light-standard/style.json",
+//         container: 'map',
+//         center: [77.616484, 12.931423], // Default Bangalore
+//         zoom: 12,
+//     });
+//     setupAutocomplete(pick_up, (coords) => startCoords = coords);
+//     setupAutocomplete(drop_off, (coords) => endCoords = coords);
+//     document.getElementById("set-route-btn").addEventListener("click", drawRoute);
+// }
+
+
+// function setupAutocomplete(query, setCoords) {
+//     let debounceTimeout;
+//     const list = document.createElement("div");
+//     list.classList.add("autocomplete-list");
+//     document.body.appendChild(list); // Append dynamically
+
+//     function fetchSuggestions() {
+//         clearTimeout(debounceTimeout);
+//         if (query.trim().length < 3) {
+//             list.style.display = "none";
+//             return;
+//         }
+
+//         debounceTimeout = setTimeout(async () => {
+//             const suggestions = await fetchAutocomplete(query);
+//             list.innerHTML = "";
+
+//             if (!suggestions.length) {
+//                 list.style.display = "none";
+//                 return;
+//             }
+
+//             suggestions.forEach(place => {
+//                 const div = document.createElement("div");
+//                 div.classList.add("suggestion");
+//                 div.textContent = place.description;
+//                 div.dataset.place_id = place.place_id;
+
+//                 div.addEventListener("click", async function () {
+//                     list.style.display = "none";
+
+//                     const details = await fetchPlaceDetails(this.dataset.place_id);
+//                     if (details) {
+//                         setCoords({ lat: details.lat, lng: details.lng });
+//                         setMarker(details.lat, details.lng);
+//                     }
+//                 });
+
+//                 list.appendChild(div);
+//             });
+
+//             list.style.display = "block";
+//         }, 300);
+//     }
+
+//     fetchSuggestions(); // Call function once
+
+//     return function removeAutocomplete() {
+//         list.remove();
+//     };
+// }
+
+
+
+
+// async function fetchAutocomplete(query) {
+//     try {
+//         const response = await fetch(`https://api.olamaps.io/places/v1/autocomplete?input=${encodeURIComponent(query)}&api_key=${OLA_API_KEY}`);
+//         if (!response.ok) throw new Error(`Autocomplete API Error: ${response.status}`);
+//         const data = await response.json();
+//         return data.predictions || [];
+//     } catch (error) {
+//         console.error("Autocomplete API error:", error);
+//         return [];
+//     }
+// }
+
+// async function fetchPlaceDetails(placeId) {
+//     try {
+//         const response = await fetch(`https://api.olamaps.io/places/v1/details?place_id=${placeId}&api_key=${OLA_API_KEY}`);
+//         if (!response.ok) throw new Error(`Place Details API Error: ${response.status}`);
+//         const data = await response.json();
+//         return data.result?.geometry?.location || null;
+//     } catch (error) {
+//         console.error("Place Details API error:", error);
+//         return null;
+//     }
+// }
+
+// function setMarker(lat, lng, type) {
+//     if (!myMap || !olaMaps) return;
+//     const color = type === "start-location" ? "green" : "red";
+//     if (type === "start-location" && startMarker) myMap.removeLayer(startMarker);
+//     if (type === "end-location" && endMarker) myMap.removeLayer(endMarker);
+//     const marker = olaMaps.addMarker({ color }).setLngLat([lng, lat]).addTo(myMap);
+//     if (type === "start-location") startMarker = marker;
+//     else endMarker = marker;
+//     myMap.flyTo({ center: [lng, lat], zoom: 14 });
+// }
+
+// async function drawRoute() {
+//     if (!startCoords || !endCoords) {
+//         alert("Please enter both start and destination locations!");
+//         return;
+//     }
+//     try {
+//         const response = await fetch(`https://api.olamaps.io/routing/v1/directions?origin=${startCoords.lat},${startCoords.lng}&destination=${endCoords.lat},${endCoords.lng}&api_key=${OLA_API_KEY}`, { method: 'POST' });
+//         const polyline = (await response.json()).routes?.[0]?.overview_polyline;
+
+//         if (!polyline) {
+//             throw new Error("No routes found.");
+//         }
+//         const routeCoords = decodePolyline(polyline);
+//         if (myMap.getLayer('route-layer')) {
+//             myMap.removeLayer('route-layer');
+//             myMap.removeSource('route');
+//         }
+//         myMap.addSource('route', {
+//             type: 'geojson',
+//             data: { type: 'Feature', geometry: { type: 'LineString', coordinates: routeCoords } }
+//         });
+//         myMap.addLayer({
+//             id: 'route-layer',
+//             type: 'line',
+//             source: 'route',
+//             paint: { 'line-color': '#FF0000', 'line-width': 4 }
+//         });
+        
+//     } catch (error) {
+//         console.error("Routing API error:", error);
+//         alert(`Failed to get route: ${error.message}`);
+//     }
+// }
+
+// function decodePolyline(polyline) {
+//     let index = 0, len = polyline.length;
+//     let lat = 0, lng = 0;
+//     const coordinates = [];
+//     while (index < len) {
+//         let byte, shift = 0, result = 0;
+//         do {
+//             byte = polyline.charCodeAt(index++) - 63;
+//             result |= (byte & 0x1f) << shift;
+//             shift += 5;
+//         } while (byte >= 0x20);
+//         lat += (result & 1) ? ~(result >> 1) : (result >> 1);
+//         shift = 0;
+//         result = 0;
+//         do {
+//             byte = polyline.charCodeAt(index++) - 63;
+//             result |= (byte & 0x1f) << shift;
+//             shift += 5;
+//         } while (byte >= 0x20);
+//         lng += (result & 1) ? ~(result >> 1) : (result >> 1);
+//         coordinates.push([lng / 1e5, lat / 1e5]);
+//     }
+//     return coordinates;
+// }
+
+
+var OLA_API_KEY = "PEWIkW6LvWQXNajUDL8HML16QNfZlkOE2RiVdAgD";
+var myMap, olaMaps;
+var startMarker = null, endMarker = null;
+var startCoords = null, endCoords = null;
+var pick_up, drop_off;
+
+$(document).ready(function () {
+    function getQueryParam(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
+
+    pick_up = getQueryParam('pick_up');
+    drop_off = getQueryParam('drop_off');
+
+    $.getScript("https://www.unpkg.com/olamaps-web-sdk@latest/dist/olamaps-web-sdk.umd.js", function () {
+        initializeMap();
+    });
+});
+
+function initializeMap() {
+    if (!OLA_API_KEY) {
+        console.error("Ola API Key is missing!");
+        alert("Ola API Key is required for the map to function.");
+        return;
+    }
+    
+    olaMaps = new OlaMaps({ apiKey: OLA_API_KEY });
+    myMap = olaMaps.init({
+        style: "https://api.olamaps.io/tiles/vector/v1/styles/default-light-standard/style.json",
+        container: 'map',
+        center: [77.616484, 12.931423],
+        zoom: 12,
+    });
+
+    setTimeout(() => {
+        if (pick_up) {
+            fetchPlaceDetails(pick_up).then(coords => {
+                if (coords) {
+                    startCoords = coords;
+                    setMarker(coords.lat, coords.lng, "start-location");
+                }
+            });
+        }
+        
+        if (drop_off) {
+            fetchPlaceDetails(drop_off).then(coords => {
+                if (coords) {
+                    endCoords = coords;
+                    setMarker(coords.lat, coords.lng, "end-location");
+                    if (startCoords) drawRoute();
+                }
+            });
+        }
+    }, 2000);
+}
+
+async function fetchPlaceDetails(placeId) {
+    try {
+        const response = await fetch(`https://api.olamaps.io/places/v1/details?place_id=${placeId}&api_key=${OLA_API_KEY}`);
+        if (!response.ok) throw new Error(`Place Details API Error: ${response.status}`);
+        const data = await response.json();
+        return data.result?.geometry?.location || null;
+    } catch (error) {
+        console.error("Place Details API error:", error);
+        return null;
+    }
+}
+
+function setMarker(lat, lng, type) {
+    if (!myMap || !olaMaps) return;
+    const color = type === "start-location" ? "green" : "red";
+
+    if (type === "start-location") {
+        if (startMarker) myMap.removeLayer(startMarker);
+        startMarker = olaMaps.addMarker({ color }).setLngLat([lng, lat]).addTo(myMap);
+    } else {
+        if (endMarker) myMap.removeLayer(endMarker);
+        endMarker = olaMaps.addMarker({ color }).setLngLat([lng, lat]).addTo(myMap);
+    }
+
+    myMap.flyTo({ center: [lng, lat], zoom: 14 });
+}
+
+async function drawRoute() {
+    if (!startCoords || !endCoords) {
+        alert("Please enter both start and destination locations!");
+        return;
+    }
+    try {
+        const response = await fetch(`https://api.olamaps.io/routing/v1/directions?origin=${startCoords.lat},${startCoords.lng}&destination=${endCoords.lat},${endCoords.lng}&api_key=${OLA_API_KEY}`, { method: 'POST' });
+        const polyline = (await response.json()).routes?.[0]?.overview_polyline;
+
+        if (!polyline) {
+            throw new Error("No routes found.");
+        }
+        const routeCoords = decodePolyline(polyline);
+        if (myMap.getLayer('route-layer')) {
+            myMap.removeLayer('route-layer');
+            myMap.removeSource('route');
+        }
+        myMap.addSource('route', {
+            type: 'geojson',
+            data: { type: 'Feature', geometry: { type: 'LineString', coordinates: routeCoords } }
+        });
+        myMap.addLayer({
+            id: 'route-layer',
+            type: 'line',
+            source: 'route',
+            paint: { 'line-color': '#FF0000', 'line-width': 4 }
+        });
+        myMap.fitBounds([[startCoords.lng, startCoords.lat], [endCoords.lng, endCoords.lat]], { padding: 50 });
+    } catch (error) {
+        console.error("Routing API error:", error);
+        alert(`Failed to get route: ${error.message}`);
+    }
+}
+
+function decodePolyline(polyline) {
+    console.log(polyline);
+    console.log("testttttttt========================");
+    let index = 0, len = polyline.length;
+    let lat = 0, lng = 0;
+    const coordinates = [];
+    while (index < len) {
+        let byte, shift = 0, result = 0;
+        do {
+            byte = polyline.charCodeAt(index++) - 63;
+            result |= (byte & 0x1f) << shift;
+            shift += 5;
+        } while (byte >= 0x20);
+        const deltaLat = (result & 1) ? ~(result >> 1) : (result >> 1);
+        lat += deltaLat;
+        shift = 0;
+        result = 0;
+        do {
+            byte = polyline.charCodeAt(index++) - 63;
+            result |= (byte & 0x1f) << shift;
+            shift += 5;
+        } while (byte >= 0x20);
+        const deltaLng = (result & 1) ? ~(result >> 1) : (result >> 1);
+        lng += deltaLng;
+        coordinates.push([lng / 1e5, lat / 1e5]);
+    }
+    return coordinates;
+}
