@@ -114,7 +114,7 @@ function attachOlaAutocomplete(frm, fields) {
 async function fetchOlaPlaceDetails(inputValue, callback) {
     if (!inputValue) return;
 
-    const apiKey = "aOiY35G2qUrtTRaLE7cN9Yfct0m4tJar6LvMaGKR"; // Load API key securely from backend
+    const apiKey = frappe.db.get_single_value('Map Setting', 'api_key')    // Load API key securely from backend
     const url = `https://api.olamaps.io/places/v1/autocomplete?input=${encodeURIComponent(inputValue)}&api_key=${apiKey}`;
 
     try {
