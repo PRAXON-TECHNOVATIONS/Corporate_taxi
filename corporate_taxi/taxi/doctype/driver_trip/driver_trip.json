@@ -17,6 +17,12 @@
   "trip_end",
   "otp",
   "status",
+  "section_break_ewgr",
+  "start_km",
+  "end_km",
+  "column_break_ndbb",
+  "total_km",
+  "fuel",
   "booking_details_section",
   "guest_name",
   "guest_phone_number",
@@ -26,9 +32,13 @@
   "trip_type",
   "sub_trip_type",
   "pick_up_location",
+  "pick_up_location_place_id",
   "location_1",
+  "location_1_place_id",
   "location_2",
+  "location_2_place_id",
   "drop_off_location",
+  "drop_off_location_place_id",
   "section_break_usyc",
   "column_break_ytlj",
   "table_wupe",
@@ -138,13 +148,15 @@
    "fetch_from": "booking.guest_name",
    "fieldname": "guest_name",
    "fieldtype": "Data",
-   "label": "Guest Name"
+   "label": "Guest Name",
+   "read_only": 1
   },
   {
    "fetch_from": "booking.guest_phone_number",
    "fieldname": "guest_phone_number",
    "fieldtype": "Phone",
-   "label": "Guest Phone Number"
+   "label": "Guest Phone Number",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_gjpa",
@@ -154,40 +166,46 @@
    "fieldname": "trip_type",
    "fieldtype": "Select",
    "label": "Trip Type",
-   "options": "Transfer\nInter City"
+   "options": "Transfer\nInter City",
+   "read_only": 1
   },
   {
    "fetch_from": "booking.sub_trip_type",
    "fieldname": "sub_trip_type",
    "fieldtype": "Select",
    "label": "Sub Trip Type",
-   "options": "One way\nRound Trip\nMulti City"
+   "options": "One way\nRound Trip\nMulti City",
+   "read_only": 1
   },
   {
    "fetch_from": "booking.pick_up_location",
    "fieldname": "pick_up_location",
    "fieldtype": "Data",
-   "label": "Pick Up Location"
+   "label": "Pick Up Location",
+   "read_only": 1
   },
   {
-   "depends_on": "sub_trip_type == \"Multi City\"",
+   "depends_on": "eval:doc.sub_trip_type == \"Multi City\"",
    "fetch_from": "booking.location_1",
    "fieldname": "location_1",
    "fieldtype": "Data",
-   "label": "Location 1"
+   "label": "Location 1",
+   "read_only": 1
   },
   {
-   "depends_on": "sub_trip_type == \"Multi City\"",
+   "depends_on": "eval:doc.sub_trip_type == \"Multi City\"",
    "fetch_from": "booking.location_2",
    "fieldname": "location_2",
    "fieldtype": "Data",
-   "label": "Location 2"
+   "label": "Location 2",
+   "read_only": 1
   },
   {
    "fetch_from": "booking.drop_off_location",
    "fieldname": "drop_off_location",
    "fieldtype": "Data",
-   "label": "Drop off Location"
+   "label": "Drop off Location",
+   "read_only": 1
   },
   {
    "fetch_from": "booking.duty_type",
@@ -195,13 +213,15 @@
    "fieldtype": "Link",
    "label": "Duty Type",
    "link_filters": "[[\"Item\",\"item_group\",\"=\",\"Duty Type\"]]",
-   "options": "Item"
+   "options": "Item",
+   "read_only": 1
   },
   {
    "fetch_from": "booking.amount",
    "fieldname": "amount",
    "fieldtype": "Currency",
-   "label": "Amount"
+   "label": "Amount",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_dpfc",
@@ -211,12 +231,75 @@
    "fieldname": "column_break_ytlj",
    "fieldtype": "Column Break",
    "hidden": 1
+  },
+  {
+   "fieldname": "section_break_ewgr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "start_km",
+   "fieldtype": "Float",
+   "label": "Start KM"
+  },
+  {
+   "fieldname": "end_km",
+   "fieldtype": "Float",
+   "label": "End KM"
+  },
+  {
+   "fieldname": "column_break_ndbb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_km",
+   "fieldtype": "Float",
+   "label": "Total KM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "fuel",
+   "fieldtype": "Data",
+   "label": "Fuel"
+  },
+  {
+   "fetch_from": "booking.pick_up_location_place_id",
+   "fieldname": "pick_up_location_place_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Pick Up Location Place ID",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.sub_trip_type == \"Multi City\"",
+   "fetch_from": "booking.location_1_place_id",
+   "fieldname": "location_1_place_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Location 1 Place ID",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.sub_trip_type == \"Multi City\"",
+   "fetch_from": "booking.location_2_place_id",
+   "fieldname": "location_2_place_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Location 2 Place ID",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "booking.drop_off_location_place_id",
+   "fieldname": "drop_off_location_place_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Drop off Location Place ID",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-01 12:01:17.037127",
+ "modified": "2025-03-30 12:07:47.971203",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Driver Trip",

@@ -69,10 +69,7 @@ class RequestforVehicle(Document):
 
 		doc_args = self.as_dict()
 
-		# if partner.get("contact"):
-		# 	contact = frappe.get_doc("Contact", partner.get("contact"))
-		# 	doc_args["contact"] = contact.as_dict()
-
+		
 		doc_args.update(
 			{
 				"partner_name": self.partner,
@@ -94,26 +91,9 @@ class RequestforVehicle(Document):
 
 		if preview:
 			return {"message": message, "subject": subject}
-
-		self.send_email(partner, sender, subject, message)
-
-
-	# def send_email(self, partner, sender, subject, message):
-	# 	"""Sends an email to the supplier."""
-	# 	self.email_sent = 1
-	
-	# 	email_log = make(
-	# 		subject=subject,
-	# 		content=message,
-	# 		recipients=self.email_id,
-	# 		sender=sender,
-	# 		send_email=True,
-	# 		doctype=self.doctype,
-	# 		name=self.name,
-	# 	)
-
-	# 	frappe.msgprint(_("Email Sent to Supplier {0}").format(self.partner))
-
+		
+		if self.email_send:
+			self.send_email(partner, sender, subject, message)
 
 
 
@@ -139,11 +119,6 @@ class RequestforVehicle(Document):
 		self.save()
 
 		frappe.msgprint(_("Email Sent to Partner {0}").format(self.partner))
-
-
-	# def format_datetime(self, dt):
-	# 	"""Formats datetime to the required format."""
-	# 	return datetime.strptime(dt, "%Y-%m-%d %H:%M:%S").strftime("%d-%m-%y %I:%M %p")
 
 
 	def format_datetime(self, dt):

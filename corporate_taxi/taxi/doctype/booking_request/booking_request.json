@@ -21,8 +21,15 @@
   "column_break_nxwe",
   "vehicle_type",
   "trip_type",
+  "sub_trip_type",
   "pick_up_location",
+  "pick_up_location_place_id",
+  "location_1",
+  "location_1_place_id",
+  "location_2",
+  "location_2_place_id",
   "drop_off_location",
+  "drop_off_location_place_id",
   "section_break_nudd",
   "column_break_qrpf",
   "booking_request_details",
@@ -81,6 +88,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
+   "no_copy": 1,
    "options": "Open\nPartial Booked\nBooked",
    "read_only": 1
   },
@@ -132,13 +140,13 @@
   },
   {
    "fieldname": "pick_up_location",
-   "fieldtype": "Data",
+   "fieldtype": "Autocomplete",
    "label": "Pick Up Location",
    "reqd": 1
   },
   {
    "fieldname": "drop_off_location",
-   "fieldtype": "Data",
+   "fieldtype": "Autocomplete",
    "label": "Drop off Location",
    "reqd": 1
   },
@@ -157,12 +165,56 @@
    "fieldname": "column_break_qrpf",
    "fieldtype": "Column Break",
    "hidden": 1
+  },
+  {
+   "fieldname": "sub_trip_type",
+   "fieldtype": "Select",
+   "label": "Sub Trip Type",
+   "options": "One way\nRound Trip\nMulti City"
+  },
+  {
+   "depends_on": "eval:doc.sub_trip_type == \"Multi City\"",
+   "fieldname": "location_1",
+   "fieldtype": "Autocomplete",
+   "label": "Location 1"
+  },
+  {
+   "depends_on": "eval:doc.sub_trip_type == \"Multi City\"",
+   "fieldname": "location_2",
+   "fieldtype": "Autocomplete",
+   "label": "Location 2"
+  },
+  {
+   "fieldname": "pick_up_location_place_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Pick Up Location Place ID"
+  },
+  {
+   "fieldname": "drop_off_location_place_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Drop off Location Place ID"
+  },
+  {
+   "depends_on": "eval:doc.sub_trip_type == \"Multi City\"",
+   "fieldname": "location_1_place_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Location 1 Place ID"
+  },
+  {
+   "depends_on": "eval:doc.sub_trip_type == \"Multi City\"",
+   "fieldname": "location_2_place_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Location 2 Place ID"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-02 00:23:00.966057",
+ "modified": "2025-03-30 10:19:42.948930",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Booking Request",

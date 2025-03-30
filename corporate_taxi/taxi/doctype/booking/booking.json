@@ -28,9 +28,13 @@
   "trip_type",
   "sub_trip_type",
   "pick_up_location",
+  "pick_up_location_place_id",
   "location_1",
+  "location_1_place_id",
   "location_2",
+  "location_2_place_id",
   "drop_off_location",
+  "drop_off_location_place_id",
   "vehicle_and_driver_details_section",
   "vehicle",
   "vehicle_number",
@@ -270,7 +274,7 @@
    "reqd": 1
   },
   {
-   "depends_on": "sub_trip_type == \"Multi City\"",
+   "depends_on": "eval:doc.sub_trip_type == \"Multi City\"",
    "fieldname": "location_1",
    "fieldtype": "Data",
    "label": "Location 1"
@@ -372,6 +376,36 @@
    "label": "Request for Vehicle",
    "options": "Request for Vehicle",
    "read_only": 1
+  },
+  {
+   "fetch_from": "booking_request.pick_up_location_place_id",
+   "fieldname": "pick_up_location_place_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Pick Up Location Place ID"
+  },
+  {
+   "depends_on": "eval:doc.sub_trip_type == \"Multi City\"",
+   "fetch_from": "booking_request.location_1_place_id",
+   "fieldname": "location_1_place_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Location 1 Place ID"
+  },
+  {
+   "depends_on": "eval:doc.sub_trip_type == \"Multi City\"",
+   "fetch_from": "booking_request.location_2_place_id",
+   "fieldname": "location_2_place_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Location 2 Place ID"
+  },
+  {
+   "fetch_from": "booking_request.drop_off_location_place_id",
+   "fieldname": "drop_off_location_place_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Drop off Location Place ID"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -382,7 +416,7 @@
    "link_fieldname": "booking"
   }
  ],
- "modified": "2025-03-02 01:17:02.843775",
+ "modified": "2025-03-30 10:18:47.652055",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Booking",

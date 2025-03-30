@@ -1,0 +1,59 @@
+[33mcommit 7336a8a075f89676cba784d246b34b92866dc1f5[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: Darshit-vadadoriya <darshpatelvadadoriya@gmail.com>
+Date:   Sun Mar 30 12:11:30 2025 +0530
+
+    update some fields and add location wise map view from driver trip
+
+[33mcommit 63e0fc9a7eea2cc54478546850d1cdeaddd1c6dc[m[33m ([m[1;31mupstream/main[m[33m, [m[1;31mupstream/HEAD[m[33m)[m
+Author: Darshit-vadadoriya <darshpatelvadadoriya@gmail.com>
+Date:   Tue Mar 4 22:30:44 2025 +0530
+
+    update get booking filter and btn name
+
+[33mcommit 69cfa1739e6396253b07961703ebe99885afd15b[m
+Author: Darshit-vadadoriya <darshpatelvadadoriya@gmail.com>
+Date:   Tue Mar 4 00:19:51 2025 +0530
+
+    add partner quotation form
+
+[33mcommit 29f30d80f201fa91e3c3e573420bf11671993cbb[m
+Author: Darshit-vadadoriya <darshpatelvadadoriya@gmail.com>
+Date:   Tue Feb 11 00:40:08 2025 +0530
+
+    update sales invoice script
+
+[33mcommit 012cd008a840250683d47fc9706f6c0fa6587825[m
+Author: Darshit-vadadoriya <darshpatelvadadoriya@gmail.com>
+Date:   Sun Feb 9 17:10:41 2025 +0530
+
+    update workspace and improve filters in driver trip
+
+[33mcommit 85a2177a16c5431ac1fdafbce3d31d9cfb2e405b[m
+Author: Darshit-vadadoriya <darshpatelvadadoriya@gmail.com>
+Date:   Sun Feb 9 16:23:35 2025 +0530
+
+    update workspace and create user permission based on the user selection in the customer and driver and partner
+
+[33mcommit 0e87d7504f3d15fbac8c8161a084b4d10886103f[m
+Author: Darshit-vadadoriya <darshpatelvadadoriya@gmail.com>
+Date:   Sun Feb 9 11:15:32 2025 +0530
+
+    update workspace and child tables
+
+[33mcommit 96967272cd6e3c6f7b8dfc616ed2ea97e1351255[m
+Author: Darshit-vadadoriya <darshpatelvadadoriya@gmail.com>
+Date:   Sat Feb 8 10:55:59 2025 +0530
+
+    update and done fiilter and update invoice creation from booking
+
+[33mcommit 921f30137eec54f931e2bb9b0228bee261f53e0e[m
+Author: Darshit-vadadoriya <darshpatelvadadoriya@gmail.com>
+Date:   Fri Feb 7 08:55:42 2025 +0530
+
+    create sales invoice and set filter based on the availablility
+
+[33mcommit dfcb1942f345e100d77061db94383fa513c4db98[m
+Author: Darshit-vadadoriya <darshpatelvadadoriya@gmail.com>
+Date:   Thu Feb 6 08:51:29 2025 +0530
+
+    update sales invoice creation and minor status changes
