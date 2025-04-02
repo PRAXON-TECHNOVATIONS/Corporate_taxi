@@ -8,6 +8,7 @@ var startCoords = null, endCoords = null;
 var pick_up, drop_off;
 
 $(document).ready(function () {
+    
     frappe.call({
         method: "corporate_taxi.override.auth.get_api_key",  // Adjust the path as per your app structure
         callback: function(response) {
@@ -21,10 +22,16 @@ $(document).ready(function () {
             
                 pick_up = getQueryParam('pick_up');
                 drop_off = getQueryParam('drop_off');
-            
-                $.getScript("https://www.unpkg.com/olamaps-web-sdk@latest/dist/olamaps-web-sdk.umd.js", function () {
-                    initializeMap();
+                console.log(pick_up);
+                console.log(drop_off);
+
+                $.getScript("/assets/corporate_taxi/js/olamaps-web-sdk/dist/olamaps-web-sdk.umd.js", function () {
+                    
+                        initializeMap(); // Ensure the function exists before calling
+                    
                 });
+
+
             } else {
                 console.warn("API Key not found.");
             }
@@ -68,7 +75,7 @@ function initializeMap() {
                 }
             });
         }
-    }, 2000);
+    }, 1000);
 }
 
 async function fetchPlaceDetails(placeId) {
