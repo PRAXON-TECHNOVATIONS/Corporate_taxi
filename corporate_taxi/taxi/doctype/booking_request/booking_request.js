@@ -12,12 +12,7 @@ frappe.ui.form.on("Booking Request", {
             }
         });
     },
-    // refresh:function(frm){
-    //     setTimeout(() => {
-    //         attachOlaAutocomplete(frm, ['pick_up_location', 'drop_off_location','location_1','location_2']);
-    //     }, 500); 
-    //    }
-
+    
     refresh: function(frm) {
         setTimeout(() => {
             attachOlaAutocomplete(frm, [
@@ -27,58 +22,18 @@ frappe.ui.form.on("Booking Request", {
                 { field: 'location_2', place_id_field: 'location_2_place_id' }
             ]);
         }, 500);
+
+        // add booking button to directly create booking from here
+        add_booking_button(frm)
+
+        // create request for vehicle from booking request
+        create_vehicle_for_request(frm)
+
+        
     }
 
 
 });
-
-
-
-// function attachOlaAutocomplete(frm, fieldnames) {
-//     fieldnames.forEach(fieldname => {
-//         frm.fields_dict[fieldname].$wrapper.find('input').on('input', function () {
-//             let placeId = $(this).val();
-//             if (placeId.length > 2) {
-//                 fetchOlaPlaceDetails(placeId, function (data) {
-//                     if (data && data.length) {
-//                         let suggestions = data.map(place => place.description);
-//                         console.log(suggestions);
-//                         frm.fields_dict[fieldname].set_data(suggestions);
-//                     }
-//                 });
-//             }
-//         });
-//     });
-// }
-
-
-// async function fetchOlaPlaceDetails(placeId, callback) {
-//     if (!placeId) return;
-
-//     const apiKey = "aOiY35G2qUrtTRaLE7cN9Yfct0m4tJar6LvMaGKR"; // Load API key securely from backend
-//     const url = `https://api.olamaps.io/places/v1/autocomplete?input=${encodeURIComponent(placeId)}&api_key=${apiKey}`;
-
-//     try {
-//         const response = await fetch(url);
-//         if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-
-//         const result = await response.json();
-//         console.log('API Response:', result);
-
-//         if (result && result.predictions) {
-//             callback(result.predictions);
-//         } else {
-//             frappe.msgprint(__('No data found for the entered location.'));
-//             callback([]);
-//         }
-//     } catch (error) {
-//         console.error('Error fetching place details:', error);
-//         frappe.msgprint(__('Failed to fetch place details. Please try again later.'));
-//         callback([]);
-//     }
-// }
-
-
 
 
 function attachOlaAutocomplete(frm, fields) {
@@ -90,7 +45,6 @@ function attachOlaAutocomplete(frm, fields) {
                     if (data && data.length) {
                         let suggestions = data.map(place => place.description);
 
-                        console.log('Suggestions:', suggestions);
 
                         // Set suggestions in the Autocomplete field
                         frm.fields_dict[field].set_data(suggestions);
@@ -126,7 +80,6 @@ function fetchOlaPlaceDetails(inputValue, callback) {
             return response.json();
         })
         .then(result => {
-            console.log('API Response:', result);
 
             if (result && result.predictions) {
                 callback(result.predictions);
@@ -140,4 +93,48 @@ function fetchOlaPlaceDetails(inputValue, callback) {
             frappe.msgprint(__('Failed to fetch place details. Please try again later.'));
             callback([]);
         });
+}
+
+
+
+// add booking button to create booking from booking request
+function add_booking_button(frm){
+    const user_role = check_user_role()
+    console.log(user_role);
+    // if status is open and form is submitted then visible this button
+    if(frm.doc.status == "Open" && frm.doc.docstatus == 1 && user_role==true){
+        // add custom button create booking
+        frm.add_custom_button("Booking",function(){
+            // create new booking
+            frappe.new_doc("Booking",{
+                "booking_request":frm.doc.name
+            })
+        },"Create")
+    }
+
+}
+
+
+// add booking button to create booking from booking request
+function create_vehicle_for_request(frm){
+    // if status is open and form is submitted then visible this button
+    if(frm.doc.status == "Open" && frm.doc.docstatus == 1){
+        // add custom button create booking
+        frm.add_custom_button("Vehicle Request",function(){
+            // create new booking
+            frappe.new_doc("Request for Vehicle",{
+                "booking_request":frm.doc.name
+            })
+        },"Create")
+    }
+
+}
+
+// check user role is system manager or not
+function check_user_role() {
+    if(frappe.user.has_role("System Manager")) {
+        return true
+    } else {
+        return false
+    }
 }

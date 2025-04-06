@@ -53,7 +53,6 @@
   "extra_charges",
   "extra_charges_details",
   "section_break_baci",
-  "total_amount",
   "total_amount_with_extra_charges",
   "column_break_ylta",
   "paid_amount",
@@ -88,7 +87,7 @@
    "default": "Today",
    "fieldname": "booking_date",
    "fieldtype": "Date",
-   "label": "Postind Date",
+   "label": "Posting Date",
    "reqd": 1
   },
   {
@@ -117,12 +116,6 @@
   {
    "fieldname": "section_break_baci",
    "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "total_amount",
-   "fieldtype": "Currency",
-   "label": "Total Amount",
-   "read_only": 1
   },
   {
    "default": "To Bill",
@@ -234,7 +227,6 @@
   },
   {
    "fetch_from": "booking_request.from_date_time",
-   "fetch_if_empty": 1,
    "fieldname": "from_date_time",
    "fieldtype": "Datetime",
    "label": "From Date & Time",
@@ -242,7 +234,6 @@
   },
   {
    "fetch_from": "booking_request.to_date_time",
-   "fetch_if_empty": 1,
    "fieldname": "to_date_time",
    "fieldtype": "Datetime",
    "label": "To Date & Time",
@@ -261,6 +252,7 @@
    "reqd": 1
   },
   {
+   "fetch_from": "booking_request.sub_trip_type",
    "fieldname": "sub_trip_type",
    "fieldtype": "Select",
    "label": "Sub Trip Type",
@@ -275,12 +267,14 @@
   },
   {
    "depends_on": "eval:doc.sub_trip_type == \"Multi City\"",
+   "fetch_from": "booking_request.location_1",
    "fieldname": "location_1",
    "fieldtype": "Data",
    "label": "Location 1"
   },
   {
    "depends_on": "eval:doc.sub_trip_type == \"Multi City\"",
+   "fetch_from": "booking_request.location_2",
    "fieldname": "location_2",
    "fieldtype": "Data",
    "label": "Location 2"
@@ -416,7 +410,7 @@
    "link_fieldname": "booking"
   }
  ],
- "modified": "2025-03-30 10:18:47.652055",
+ "modified": "2025-04-05 19:23:26.043620",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Booking",

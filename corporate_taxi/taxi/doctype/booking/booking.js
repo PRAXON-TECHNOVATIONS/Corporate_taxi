@@ -7,39 +7,7 @@ var unavailable_vehicle = {}
 
 frappe.ui.form.on("Booking", {
 
-    // onload: function(frm) {
-    
-    //   setTimeout(() => {
-    //     console.log("Vehicle List======================");
-    //     console.log(unavailable_vehicle);
-    //     frm.set_query('vehicle', function(doc) {
-    //         return {
-    //             filters: Object.assign(
-    //                 unavailable_vehicle[doc.name]
-    //                     ? { name: ['in', unavailable_vehicle[doc.name]] }
-    //                     : {},
-    //                 { custom_vehicle_type: doc.vehicle_type }
-    //             )
-    //         };
-    //     });
-
-    //     frm.set_query('driver', function(doc) {
-    //         return {
-    //             filters: doc && unavailable_drivers[doc.name]
-    //                 ? { name: ['in', unavailable_drivers[doc.name]] }
-    //                 : {}
-    //         };
-    //     });
-    //   }, 1500);
-        
-        
-       
-    
-      
-    
-    // },
-
-
+   
     onload: function(frm) {
         setTimeout(() => {
             check_available_vehicles(frm);
@@ -50,10 +18,7 @@ frappe.ui.form.on("Booking", {
         if(frm.is_new()){
             frm.set_value("status","To Bill")
         }
-    },
-    refresh: function(frm) {
-        check_available_vehicles(frm);
-        check_available_drivers(frm);
+
     },
     booking_request: function(frm) {
         check_available_vehicles(frm);
@@ -71,25 +36,11 @@ frappe.ui.form.on("Booking", {
         check_available_drivers(frm);
     },
     refresh: function(frm) {
+        check_available_vehicles(frm);
+        check_available_drivers(frm);
+        // set items only one time
+        add_item_only_once(frm)
        
-        // hide row for particular driver user
-            // frm.fields_dict['booking_details'].grid.grid_rows.forEach(row => {
-            //     let child = row.doc;
-                
-            //     frappe.call({
-            //         method: 'corporate_taxi.taxi.doctype.driver_trip.driver_trip.get_driver_for_user',
-            //         callback: function(response) {
-            //             if (child.driver !== response.message.driver_id) {
-            //                 row.wrapper.hide();  
-            //             }
-            //             else{
-            //                 row.wrapper.show();
-            //             }
-            //         }
-            //     })
-            // });
-     
-
 
             if (
                 frm.doc.status != "Completed" &&
@@ -98,56 +49,7 @@ frappe.ui.form.on("Booking", {
                  frappe.user.has_role("Accounts User") ||
                  frappe.user.has_role("Accounts Manager"))
             ) {
-            // frm.add_custom_button(__('Create Invoice'), function() {
-            //     let customer_name = frm.doc.customer;
-            //     let total_amount = frm.doc.total_amount - frm.doc.paid_amount;
-        
-            //     // Create a new Sales Invoice
-            //     frappe.model.with_doctype('Sales Invoice', function() {
-            //         let invoice = frappe.model.get_new_doc('Sales Invoice');
-            //         invoice.customer = customer_name;
-            //         invoice.custom_reference_booking_id = frm.doc.name;
-        
-            //         // Add items for extra charges from the child table
-            //         $.each(frm.doc.extra_charges_details || [], function(index, charge) {
-            //             let charge_item = frappe.model.add_child(invoice, 'items');
-        
-            //             // Set the item code and quantity first
-            //             charge_item.item_code = charge.extra_charges_type;  // 'charges_type' is the item code
-            //             charge_item.qty = 1;  // Default quantity
-            //             charge_item.price_list_rate = 0;  // Set price list rate to 0
-            //             charge_item.ignore_pricing_rule = 1; // Ignore pricing rules
-            //         });
-        
-            //         setTimeout(() => {
-            //             // Now loop through the items and set the rate after the row is added
-            //             $.each(invoice.items || [], function(index, item) {
-            //                 let charge = frm.doc.extra_charges[index];
-            //                 if (item.item_code === charge.charges_type) {
-            //                     frappe.model.set_value(item.doctype, item.name, 'rate', charge.price);
-            //                     frappe.model.set_value(item.doctype, item.name, 'amount', item.qty * charge.price);
-            //                 }
-            //             });
-            //         }, 1000);
-        
-
-            //         setTimeout(() => {
-            //             $.each(cur_frm.doc.items || [], function(index, row) {
-            //                 cur_frm.script_manager.trigger('item_code', row.doctype, row.name);
-            //             });
-                        
-            //         }, 1000);
-            //         // Open the new Sales Invoice form
-            //         frappe.set_route('Form', 'Sales Invoice', invoice.name);
-            //     });
-            // });
-
-
-
-            
-
-
-
+    
             frm.add_custom_button(__('Create Invoice'), function() {
                 let customer_name = frm.doc.customer;
                 let total_amount = frm.doc.total_amount - frm.doc.paid_amount;
@@ -257,8 +159,6 @@ frappe.ui.form.on("Booking", {
             },
             callback: function(res) {
                 if (res.message) {
-                   console.log(res.message);
-                   console.log(res.message.guest_phone_number);
                    frm.set_value("guest_phone_number",res.message.guest_phone_number)
                 }
             }
@@ -292,23 +192,7 @@ frappe.ui.form.on("Booking", {
 
 
     
-    
-    // before_save(frm){
-    //     // set calculation for Total Amount
-    //     calculate_total(frm)
-        
-    // }
 });
-
-// calculate the total amount
-// function calculate_total(frm) {
-//     let total = 0;
-//     frm.doc.booking_details.forEach(item => {
-//         total += item.amount || 0;
-//     });
-
-//     frm.set_value('total_amount', total);
-// }
 
 
 frappe.ui.form.on('Booking Form Details', {
@@ -483,8 +367,6 @@ function check_available_vehicles(frm) {
         },
         callback: function(r) {
             if (r.message) {
-                console.log(r.message);
-                console.log("=============================");
                 update_vehicle_query(frm, r.message);
             }
         }
@@ -514,8 +396,6 @@ function check_available_drivers(frm) {
 
 // Function to update vehicle query
 function update_vehicle_query(frm, unavailable_vehicles) {
-    console.log("Unavailable Vehicles:", unavailable_vehicles);
-
     frm.set_query('vehicle', function(doc) {
         return {
             filters: {
@@ -530,15 +410,37 @@ function update_vehicle_query(frm, unavailable_vehicles) {
 
 // Function to update driver query
 function update_driver_query(frm, unavailable_drivers) {
-    console.log("Unavailable Drivers:", unavailable_drivers);
-
     frm.set_query('driver', function(doc) {
         return {
             filters: {
-                name: ['not in', unavailable_drivers]
+                name: ['not in', unavailable_drivers],
+                status:"Active"
             }
         };
     });
 
     frm.refresh_field('driver');
+}
+
+
+
+function add_item_only_once(frm){
+    frm.fields_dict['extra_charges_details'].grid.get_field('extra_charges_type').get_query = function(doc, cdt, cdn) {
+        var selected_items = [];
+
+        // Loop through the items in the child table to collect already selected items
+        frm.doc.extra_charges_details.forEach(function(item_row) {
+            if (item_row.extra_charges_type) {
+                selected_items.push(item_row.extra_charges_type);
+            }
+        });
+        // Filter out selected items from the Link field in the current row
+        return {
+            filters: {
+                'name': ['not in', selected_items],
+                'item_group':'Extra Charges'
+            }
+        };
+    };
+
 }

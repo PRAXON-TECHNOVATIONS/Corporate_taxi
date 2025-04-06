@@ -66,6 +66,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Driver ID",
+   "link_filters": "[[\"Driver\",\"status\",\"=\",\"Active\"]]",
    "options": "Driver",
    "reqd": 1
   },
@@ -78,14 +79,16 @@
   {
    "default": "Now",
    "fieldname": "trip_start",
-   "fieldtype": "Time",
+   "fieldtype": "Datetime",
    "label": "Trip Start",
+   "no_copy": 1,
    "reqd": 1
   },
   {
    "fieldname": "trip_end",
-   "fieldtype": "Time",
-   "label": "Trip End"
+   "fieldtype": "Datetime",
+   "label": "Trip End",
+   "no_copy": 1
   },
   {
    "fieldname": "otp",
@@ -97,6 +100,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
+   "no_copy": 1,
    "options": "Start\nRunning\nCompleted",
    "read_only": 1,
    "reqd": 1
@@ -299,7 +303,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-30 12:07:47.971203",
+ "modified": "2025-04-06 17:33:03.967707",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Driver Trip",

@@ -20,6 +20,8 @@ frappe.ui.form.on("Driver Trip", {
     },
     refresh:function(frm){
         view_map(frm)
+        //set item only one row in whole table
+        add_item_only_once(frm)
     },
     start_km:function(frm){
         calckm(frm)
@@ -29,7 +31,7 @@ frappe.ui.form.on("Driver Trip", {
     },
 
     before_submit(frm){
-        frm.set_value('trip_end', frappe.datetime.now_time());
+        // frm.set_value('trip_end', frappe.datetime.now_time());
         frm.set_value('status', "Completed");
             frm.refresh_field("trip_end")
     },
@@ -77,7 +79,7 @@ frappe.ui.form.on("Driver Trip", {
                 driver: frm.doc.driver_id,
             },
             callback: function(r) {
-                console.log(r);
+                
                 if (r.message) {
                     
                    frm.set_query('booking', function() {
@@ -145,7 +147,10 @@ frappe.ui.form.on('Additional Charges', {
         var start_km = frm.doc.start_km
         var end_km = frm.doc.end_km
 
-        if(start_km && end_km)
+        if(start_km > end_km){
+            frappe.throw("Start KM is not bigger then End KM")
+        }
+        else if(start_km && end_km)
         {
             total = end_km - start_km
             frm.set_value("total_km",total)
@@ -165,4 +170,30 @@ frappe.ui.form.on('Additional Charges', {
 
         
     }
+
+
+
+// set item in child table only one row of whole table
+    function add_item_only_once(frm){
+        frm.fields_dict['additional_charges'].grid.get_field('charges_type').get_query = function(doc, cdt, cdn) {
+            var selected_items = [];
     
+            // Loop through the items in the child table to collect already selected items
+            frm.doc.additional_charges.forEach(function(item_row) {
+                if (item_row.charges_type) {
+                    selected_items.push(item_row.charges_type);
+                }
+            });
+            // Filter out selected items from the Link field in the current row
+            return {
+                filters: {
+                    'name': ['not in', selected_items],
+                    'item_group':'Extra Charges'
+                }
+            };
+        };
+    
+    }
+    
+
+

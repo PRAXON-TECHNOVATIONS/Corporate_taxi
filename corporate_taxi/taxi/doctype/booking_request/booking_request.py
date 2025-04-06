@@ -3,10 +3,15 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.utils import getdate
+
 
 
 class BookingRequest(Document):
-	pass
+	def validate(self):
+          if getdate(self.from_date_time) > getdate(self.to_date_time):
+              frappe.throw("From Date is bigger than To Date. Please enter a valid date.")
+
 
 @frappe.whitelist()
 def get_customer_for_user():
