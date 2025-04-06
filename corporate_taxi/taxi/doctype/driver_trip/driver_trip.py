@@ -17,8 +17,7 @@ class DriverTrip(Document):
 
 
    def on_submit(self):
-    print(now())
-    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+   
     self.status = "Completed"  # Set status as Completed
     self.trip_end = now()       # Set current time in trip_end field
     frappe.db.set_value("Booking", self.booking, "trip_status", "Trip Completed")
@@ -296,6 +295,10 @@ def get_booking_details(booking_name, driver_id):
 
 
 def validate_kms(self):
-    if self.start_km > self.end_km:
-        frappe.throw("Start KM is bigger then end KM")
-        
+    
+    if self.start_km is not None and self.end_km is not None:
+        if self.start_km > self.end_km:
+            frappe.throw("Start KM is bigger than End KM")
+    if(self.start_km == 0 and self.end_km == 0):
+        frappe.db.set_value("Driver Trip",self.name,"total_km",0)
+        self.reload()
