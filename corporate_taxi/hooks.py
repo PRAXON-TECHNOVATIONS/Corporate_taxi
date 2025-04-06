@@ -179,7 +179,7 @@ scheduler_events = {
 # 		"corporate_taxi.tasks.daily"
 # 	],
 	"hourly": [
-		"corporate_taxi.override.vehicle.validate"
+		"corporate_taxi.override.vehicle.check_expiry_date"
 	],
 # 	"weekly": [
 # 		"corporate_taxi.tasks.weekly"
