@@ -44,7 +44,11 @@ app_license = "mit"
 
 # include js in doctype views
 # doctype_js = {"doctype" : "public/js/doctype.js"}
-doctype_js = {"Sales Invoice" : "public/js/sales_invoice.js"}
+doctype_js = {
+                "Sales Invoice" : "public/js/sales_invoice.js",
+                "Vehicle" : "public/js/vehicle.js",
+                "Driver" : "public/js/driver.js"
+            }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -150,35 +154,40 @@ doc_events = {
     },
     "Driver":{
         "on_update":"corporate_taxi.override.driver.on_update",
+        "validate":"corporate_taxi.override.driver.validate",
+
     },
     "Supplier":{
         "on_update":"corporate_taxi.override.partners.on_update",
     },
     "Customer":{
         "on_update":"corporate_taxi.override.customer.on_update",
+    },
+    "Vehicle":{
+        "validate":"corporate_taxi.override.vehicle.validate",
     }
 }
 
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
+scheduler_events = {
 # 	"all": [
 # 		"corporate_taxi.tasks.all"
 # 	],
 # 	"daily": [
 # 		"corporate_taxi.tasks.daily"
 # 	],
-# 	"hourly": [
-# 		"corporate_taxi.tasks.hourly"
-# 	],
+	"hourly": [
+		"corporate_taxi.override.vehicle.validate"
+	],
 # 	"weekly": [
 # 		"corporate_taxi.tasks.weekly"
 # 	],
 # 	"monthly": [
 # 		"corporate_taxi.tasks.monthly"
 # 	],
-# }
+}
 
 # Testing
 # -------

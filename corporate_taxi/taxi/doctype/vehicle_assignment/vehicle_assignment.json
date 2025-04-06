@@ -14,13 +14,14 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Vehicle",
-   "options": "Vehicle"
+   "options": "Vehicle",
+   "set_only_once": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-01-26 22:02:30.271346",
+ "modified": "2025-04-05 11:21:11.259818",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Vehicle Assignment",
