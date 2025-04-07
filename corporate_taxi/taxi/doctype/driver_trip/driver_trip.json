@@ -39,9 +39,6 @@
   "location_2_place_id",
   "drop_off_location",
   "drop_off_location_place_id",
-  "section_break_usyc",
-  "column_break_ytlj",
-  "table_wupe",
   "section_break_lwdv",
   "column_break_dpfc",
   "additional_charges"
@@ -108,16 +105,6 @@
   {
    "fieldname": "column_break_kb9n",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "section_break_usyc",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "table_wupe",
-   "fieldtype": "Table",
-   "hidden": 1,
-   "options": "Driver Trip Details"
   },
   {
    "fieldname": "booking",
@@ -232,11 +219,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "column_break_ytlj",
-   "fieldtype": "Column Break",
-   "hidden": 1
-  },
-  {
    "fieldname": "section_break_ewgr",
    "fieldtype": "Section Break"
   },
@@ -303,7 +285,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-06 17:33:03.967707",
+ "modified": "2025-04-07 07:45:15.878255",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Driver Trip",
