@@ -7,6 +7,11 @@ from frappe.model.document import Document
 
 
 class Booking(Document):
+	def on_update(self):
+		# set sum of charges details table
+		set_total_amount(self)
+
+
 	
 	def on_submit(self):
 		# Initial booking status flags
@@ -34,10 +39,15 @@ class Booking(Document):
 		book_status = "Booked" 
 		frappe.db.set_value("Booking Request", self.booking_request, "status", book_status)
 
+		print(self.from_date_time)
 
 		# for data in self.booking_details:
-		from_date_time = datetime.strptime(self.from_date_time, "%Y-%m-%d %H:%M:%S")
-		to_date_time = datetime.strptime(self.to_date_time, "%Y-%m-%d %H:%M:%S")
+		# from_date_time = datetime.strptime(self.from_date_time, "%Y-%m-%d %H:%M:%S")
+		# to_date_time = datetime.strptime(self.to_date_time, "%Y-%m-%d %H:%M:%S")
+
+		from_date_time = self.from_date_time
+		to_date_time = self.to_date_time
+
 
 		# Check for overlapping records and create history
 		for record_type, field, parenttype, parentfield in [
@@ -91,22 +101,8 @@ class Booking(Document):
 
 
 	def on_cancel(self):
-		# # Revert child records' status to "Open"
-		# for data in self.booking_details:
-		# 	frappe.db.set_value("Booking Request Details", data.reference_id, "status", "Open")
 
-		# # Check if there are any other booked details in the parent booking request
-		# child_statuses = frappe.get_all(
-		# 	"Booking Request Details",
-		# 	filters={"parent": self.booking_request},
-		# 	fields=["status"]
-		# )
-
-		## Determine parent booking status
-		# all_open = all(status_record.status == "Open" for status_record in child_statuses)
-		# partial_booked = any(status_record.status == "Booked" for status_record in child_statuses)
-
-		# # Update parent status based on child statuses
+		# Update parent status based on child statuses
 		book_status = "Open" 
 		frappe.db.set_value("Booking Request", self.booking_request, "status", book_status)
 
@@ -156,70 +152,6 @@ def get_driver_vehicle_list(driver):
     return vehicles
 
 
-
-# @frappe.whitelist()
-# def get_available_drivers(from_datetime, to_datetime):
-#     # Fetch booked drivers within the specified date-time range
-#     booked_drivers = frappe.db.sql("""
-#         SELECT parent
-#         FROM `tabVehicle History`
-#         WHERE 
-#             (from_date_time <= %(to_datetime)s AND to_date_time >= %(from_datetime)s)
-#     """, {
-#         "from_datetime": from_datetime,
-#         "to_datetime": to_datetime
-#     }, as_dict=True)
-
-#     # Extract driver names from the query result
-#     booked_driver_list = [d['parent'] for d in booked_drivers]
-
-#     # Return a unique list of booked drivers
-#     return list(set(booked_driver_list))
-
-
-# ==========================================================================
-# @frappe.whitelist()
-# def get_available_drivers(vehicle, from_datetime, to_datetime):
-#     # Step 1: Get drivers assigned to the given vehicle
-#     excluded_drivers = frappe.db.sql("""
-#         SELECT parent
-#         FROM `tabVehicle Assignment`
-#         WHERE parenttype = 'Driver' AND vehicle = %(vehicle)s
-#     """, {
-#         "vehicle": vehicle
-#     }, as_dict=True)
-
-#     # Convert to a list of driver IDs to exclude
-#     excluded_driver_list = [d['parent'] for d in excluded_drivers]
-
-#     # Step 2: Fetch available drivers who are not assigned to the given vehicle
-#     drivers = frappe.db.sql("""
-#         SELECT parent
-#         FROM `tabVehicle History`
-#         WHERE 
-#             (from_date_time <= %(to_datetime)s AND to_date_time >= %(from_datetime)s)
-#             AND parent NOT IN %(excluded_drivers)s
-        
-#         UNION
-        
-#         SELECT parent
-#         FROM `tabVehicle Assignment`
-#         WHERE 
-#             parenttype = 'Driver' AND parent NOT IN %(excluded_drivers)s
-#     """, {
-#         "from_datetime": from_datetime,
-#         "to_datetime": to_datetime,
-#         "excluded_drivers": tuple(excluded_driver_list) or ('',)  # Handles empty list case
-#     }, as_dict=True)
-
-#     # Extract unique driver names
-#     driver_list = [d['parent'] for d in drivers]
-
-#     return list(set(driver_list))
-
-
-import frappe
-
 @frappe.whitelist()
 def get_available_drivers(vehicle, from_datetime, to_datetime):
     # Step 1: Fetch drivers who are occupied during the requested time slot in Vehicle History
@@ -249,34 +181,6 @@ def get_available_drivers(vehicle, from_datetime, to_datetime):
 
     return available_drivers
 
-
-
-
-
-
-
-
-# @frappe.whitelist()
-# def get_available_vehicles(vehicle_type, from_datetime, to_datetime):
-#     available_vehicles = frappe.db.sql("""
-#         SELECT name 
-#         FROM `tabVehicle`
-#         WHERE custom_vehicle_type = %s
-#         AND name NOT IN (
-#             SELECT parent 
-#             FROM `tabVehicle History` 
-#             WHERE (
-#                 (%s BETWEEN from_date_time AND to_date_time)
-#                 OR (%s BETWEEN from_date_time AND to_date_time)
-#                 OR (from_date_time BETWEEN %s AND %s)
-#                 OR (to_date_time BETWEEN %s AND %s)
-#                 OR (from_date_time <= %s AND to_date_time >= %s)
-#             )
-           
-#         )
-#     """, (vehicle_type, from_datetime, to_datetime, from_datetime, to_datetime, from_datetime, to_datetime, from_datetime, to_datetime), as_dict=True)
-
-#     return [vehicle['name'] for vehicle in available_vehicles]
 
 
 @frappe.whitelist()
@@ -331,3 +235,12 @@ def get_booking_request_details(booking_request):
 @frappe.whitelist()
 def get_booking_request(booking_request):
 	return frappe.get_doc("Booking Request", booking_request)
+
+
+
+# set total amount (on_update)
+def set_total_amount(self):
+	if self.extra_charges_details:
+			total_amount_with_extra_charges = sum(row.price for row in self.extra_charges_details)
+			frappe.db.set_value("Booking",self.name,"total_amount_with_extra_charges",total_amount_with_extra_charges)
+			self.reload()

@@ -43,7 +43,8 @@ frappe.ui.form.on("Booking", {
        
 
             if (
-                frm.doc.status != "Completed" &&
+                frm.doc.status != "Completed" && 
+                frm.doc.docstatus == 1 &&
                 (frappe.user.has_role("Supplier") ||
                  frappe.user.has_role("System Manager") ||
                  frappe.user.has_role("Accounts User") ||

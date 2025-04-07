@@ -21,33 +21,7 @@ class DriverTrip(Document):
     self.status = "Completed"  # Set status as Completed
     self.trip_end = now()       # Set current time in trip_end field
     frappe.db.set_value("Booking", self.booking, "trip_status", "Trip Completed")
-    grouped_data = {}
-
-    if self.table_wupe:
-        for wupe_data in self.table_wupe:
-            duty_type = wupe_data.get("duty_type")
-            reference_id = wupe_data.get("reference_id")
-
-            if not duty_type:
-                continue
-
-            key = duty_type
-
-            if key not in grouped_data:
-                grouped_data[key] = {
-                    "guest_name": wupe_data.get("guest_name"),
-                    "guest_phone_number": wupe_data.get("guest_phone_number"),
-                    "duty_type": duty_type,
-                    "reference_id": reference_id,
-                    "amount": 0,
-                    "charges_type": None,
-                    "extra_kmhour": 0,
-                    "price_per_kmhour": 0,
-                    "total_extra_charges": 0
-                }
-
-            grouped_data[key]["amount"] += wupe_data.get("amount", 0)
-
+    
   
     if not self.additional_charges:
             return
@@ -90,11 +64,6 @@ class DriverTrip(Document):
             fields=["name"]
         )
 
-        # # Update status in Booking Form Details
-        # for data in self.table_wupe:
-        #     if data.reference_id:
-        #         frappe.db.set_value("Booking Form Details", data.reference_id, "status", "Open")
-
         frappe.db.set_value("Booking", self.booking, "trip_status", "Open")
 
 
@@ -119,33 +88,7 @@ class DriverTrip(Document):
 
                 booking_doc.save()
 
-        # # Subtract price in extra_charges table for each item
-        # if self.table_wupe:
-        #     for wupe_data in self.table_wupe:
-        #         duty_type = wupe_data.get("duty_type")
-        #         amount = wupe_data.get("amount", 0)
-
-        #         # Subtract for duty_type
-        #         subtract_or_delete(duty_type, amount)
-
-        # if self.additional_charges:
-        #     for charge_data in self.additional_charges:
-        #         charges_type = charge_data.get("charges_type")
-        #         price_per_kmhour = charge_data.get("total_extra_charges", 0)
-
-        #         # Subtract for charges_type
-        #         subtract_or_delete(charges_type, price_per_kmhour)
-
-        #  # Recalculate the sum of the price column in extra_charges
-        # booking_doc = frappe.get_doc("Booking", self.booking)
-        # total_price = sum(charge.price for charge in booking_doc.extra_charges)
-
-        # # Update the total sum field (you may need to add a field for this if it doesn't exist)
-        # booking_doc.total_amount_with_extra_charges = total_price
-
-        # # Save the updated booking document
-        # booking_doc.save()
-
+    
 
         if not self.booking:
             return
@@ -169,34 +112,6 @@ class DriverTrip(Document):
 
 
 
-# @frappe.whitelist()
-# def get_setted_driver_booking_id(driver):
-#     if not driver:
-#         return []
-
-    
-#     approved_bookings = frappe.get_all(
-#         "Booking",
-#         filters={"docstatus": 1},
-#         pluck="name"  # This returns a list of booking names
-#     )
-
-#     # Step 2: Get Booking Form Details where driver matches, status is 'Open', and parent is in the approved bookings
-#     booking_id = frappe.get_all(
-#         "Booking Form Details",
-#         filters={
-#             "driver": driver,
-#             "status": "Open",
-#             "parent": ["in", approved_bookings]
-#         },
-#         fields=["parent"]
-#     )
-
-
-#     return booking_id
-
-
-
 
 @frappe.whitelist()
 def get_setted_driver_booking_id(driver):
@@ -213,12 +128,6 @@ def get_setted_driver_booking_id(driver):
             },
             pluck="name"  # This returns a list of booking names
         )
-
-
-    print(approved_bookings)
-    print("\n\n\n\n\n\n\n\n\n")
-    return approved_bookings
-
 
 
 
@@ -301,4 +210,4 @@ def validate_kms(self):
             frappe.throw("Start KM is bigger than End KM")
     if(self.start_km == 0 and self.end_km == 0):
         frappe.db.set_value("Driver Trip",self.name,"total_km",0)
-        self.reload()
+        # self.reload()
