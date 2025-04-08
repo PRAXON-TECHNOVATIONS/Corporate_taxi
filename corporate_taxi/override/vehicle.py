@@ -16,8 +16,9 @@ def validate_fasttag_date(doc):
             frappe.throw("Fasttag expiry date bigger then fast tag validity start date")
             
 def validate_fasttag_number(doc):
-     if len(doc.custom_fastag_number) != 14:
-          frappe.throw("Please Validate fasttag number")
+     if doc.custom_fastag_number:
+        if len(doc.custom_fastag_number) != 14:
+            frappe.throw("Please Validate fasttag number")
 
 
 
