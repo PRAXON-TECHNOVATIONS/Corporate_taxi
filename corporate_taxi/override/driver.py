@@ -71,3 +71,69 @@ def aadhar_number_validate(doc):
 def license_number(doc):
     if len(doc.license_number) != 15:
         frappe.throw("Please enter valid License number")
+
+
+
+
+# test current lat and log
+import frappe
+import requests
+
+@frappe.whitelist()
+def update_current_user_location():
+    user = frappe.session.user
+    ip = frappe.local.request_ip
+
+    if not ip:
+        frappe.throw("Could not get IP address.")
+
+    try:
+        url = f"https://ipapi.co/{ip}/json/"
+        response = requests.get(url, timeout=5)
+
+        if response.status_code != 200:
+            frappe.throw(f"Error from IP API: {response.status_code}\n{response.text}")
+
+        try:
+            data = response.json()
+            return data
+        except requests.exceptions.JSONDecodeError:
+            frappe.throw(f"Could not decode response from API:\n{response.text}")
+
+        lat = data.get("latitude")
+        lon = data.get("longitude")
+
+        if not lat or not lon:
+            frappe.throw(f"Latitude or longitude not found in response:\n{data}")
+
+        # frappe.db.set_value("User", user, {
+        #     "latitude": lat,
+        #     "longitude": lon
+        # })
+
+        return {
+            "message": "Location updated successfully",
+            "latitude": lat,
+            "longitude": lon
+        }
+
+    except Exception as e:
+        frappe.log_error(f"Location update failed for {user}: {str(e)}")
+        frappe.throw("Location update failed.")
+
+
+
+@frappe.whitelist()
+def update_driver_location(latitude, longitude):
+    user = frappe.session.user
+
+    driver = frappe.db.get_value('Driver', {'custom_user': user}, 'name')
+    if not driver:
+        return "No Driver linked to current user"
+
+    frappe.db.set_value('Driver', driver, {
+        'custom_latitude': latitude,
+        'custom_longitude': longitude
+    })
+
+    return driver

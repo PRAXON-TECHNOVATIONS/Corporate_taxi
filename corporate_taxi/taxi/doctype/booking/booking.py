@@ -75,13 +75,17 @@ class Booking(Document):
 
 				if overlapping_record:
 					frappe.throw(f"'{parent_value}' ({record_type.lower()}) is already assigned for the given date and time.")
+				# from_date_time = self.from_date_time
+				# to_date_time = self.to_date_time
+				from_date_time = datetime.strptime(self.from_date_time, '%Y-%m-%d %H:%M:%S')
+				to_date_time = datetime.strptime(self.to_date_time, '%Y-%m-%d %H:%M:%S')
 
 				# Create history record
 				new_doc = frappe.new_doc(f"{record_type} History")
 				new_doc.update({
 					"booking_id": self.name,
-					"from_date_time": self.from_date_time,
-					"to_date_time": self.to_date_time,
+					"from_date_time": from_date_time,
+					"to_date_time": to_date_time,
 					"parent": parent_value,
 					"parenttype": parenttype,
 					"parentfield": parentfield,
@@ -90,9 +94,8 @@ class Booking(Document):
 
 			# Show success message
 		frappe.msgprint(
-			f"Vehicle '{self.vehicle}' and Driver '{self.driver}' assigned from {from_date_time.strftime('%d-%m-%Y %H:%M')} to {to_date_time.strftime('%d-%m-%Y %H:%M')}."
-		)
-
+		f"Vehicle '{self.vehicle}' and Driver '{self.driver}' assigned from {from_date_time.strftime('%d-%m-%Y %H:%M')} to {to_date_time.strftime('%d-%m-%Y %H:%M')}."
+	)
 		if self.request_for_vehicle:
 			frappe.db.set_value("Request for Vehicle",self.request_for_vehicle,"status","Completed")
 
