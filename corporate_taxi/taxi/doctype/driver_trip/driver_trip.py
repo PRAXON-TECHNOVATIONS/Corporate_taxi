@@ -37,10 +37,10 @@ class DriverTrip(Document):
         charges_type = charge_data.get("charges_type") or "N/A"
         total_extra_charges = charge_data.get("total_extra_charges", 0)
         
-    booking_doc.append("extra_charges_details", {
-         "extra_charges_type": charges_type,
-         "price": total_extra_charges
-     })
+        booking_doc.append("extra_charges_details", {
+            "extra_charges_type": charges_type,
+            "price": total_extra_charges
+        })
 
     
     booking_doc.append("extra_charges_details", {
@@ -57,58 +57,39 @@ class DriverTrip(Document):
 
 
    def on_cancel(self):
-        # Delete Trip History records related to the current trip
-        trip_histories = frappe.get_all(
-            "Trip History",
-            filters={"trip_id": self.name},
-            fields=["name"]
-        )
-
-        frappe.db.set_value("Booking", self.booking, "trip_status", "Open")
-
-
-        # Delete Trip History records
-        for trip in trip_histories:
-            frappe.delete_doc("Trip History", trip.name, ignore_permissions=True)
-
-        # Function to subtract price or delete if zero
-        def subtract_or_delete(charges_type, price):
-            booking_doc = frappe.get_doc("Booking", self.booking)
-            existing_row = next(
-                (charge for charge in booking_doc.extra_charges if charge.charges_type == charges_type),
-                None
+        try:
+            # Delete Trip History records related to the current trip
+            trip_histories = frappe.get_all(
+                "Trip History",
+                filters={"trip_id": self.name},
+                fields=["name"]
             )
 
-            if existing_row:
-                existing_row.price -= price  # Subtract the price
+            # Set the trip status back to "Open"
+            frappe.db.set_value("Booking", self.booking, "trip_status", "Open")
 
-                # Remove row if price <= 0
-                if existing_row.price <= 0:
-                    booking_doc.extra_charges.remove(existing_row)
+            # Delete Trip History records
+            for trip in trip_histories:
+                frappe.delete_doc("Trip History", trip.name, ignore_permissions=True)
 
-                booking_doc.save()
+            if not self.booking:
+                return
 
-    
+            booking_doc = frappe.get_doc("Booking", self.booking)
 
-        if not self.booking:
-            return
+           
+            booking_doc.set('extra_charges_details', [])
 
-        booking_doc = frappe.get_doc("Booking", self.booking)
+            booking_doc.total_amount_with_extra_charges = 0
+            # Save the updated Booking document
+            booking_doc.save(ignore_permissions=True)
 
-        # Identify charges that were added from this document
-        reference_name = self.name  # Use self.name as reference ID
+            # Commit changes to the database
+            frappe.db.commit()
 
-        # Filter out the charges added by this document
-        booking_doc.extra_charges = [
-            charge for charge in booking_doc.extra_charges if charge.get("reference_id") != reference_name
-        ]
-
-        # Recalculate total after deletion
-        booking_doc.total_amount_with_extra_charges = sum(charge.price for charge in booking_doc.extra_charges)
-
-        # Save the Booking document
-        booking_doc.save(ignore_permissions=True)
-        frappe.db.commit()
+        except Exception as e:
+            # Log error for debugging or any issue
+            frappe.log_error(f"Error during cancellation of trip {self.name}: {str(e)}")
 
 
 
