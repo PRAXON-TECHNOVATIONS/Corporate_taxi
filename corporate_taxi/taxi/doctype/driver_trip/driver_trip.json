@@ -41,7 +41,9 @@
   "drop_off_location_place_id",
   "section_break_lwdv",
   "column_break_dpfc",
-  "additional_charges"
+  "additional_charges",
+  "trip_log_tab",
+  "trip_route_history"
  ],
  "fields": [
   {
@@ -280,12 +282,23 @@
    "hidden": 1,
    "label": "Drop off Location Place ID",
    "read_only": 1
+  },
+  {
+   "fieldname": "trip_log_tab",
+   "fieldtype": "Tab Break",
+   "label": "Trip Log"
+  },
+  {
+   "fieldname": "trip_route_history",
+   "fieldtype": "Table",
+   "label": "Trip Route History",
+   "options": "Trip Tracking Log"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-07 07:45:15.878255",
+ "modified": "2025-04-13 17:22:43.190910",
  "modified_by": "Administrator",
  "module": "taxi",
  "name": "Driver Trip",
