@@ -123,17 +123,140 @@ def update_current_user_location():
 
 
 
+# @frappe.whitelist()
+# def update_driver_location(latitude, longitude):
+#     user = frappe.session.user
+
+#     driver = frappe.db.get_value('Driver', {'custom_user': user}, 'name')
+#     if not driver:
+#         return "No Driver linked to current user"
+
+#     frappe.db.set_value('Driver', driver, {
+#         'custom_latitude': latitude,
+#         'custom_longitude': longitude
+#     })
+
+#     return driver
+
+
 @frappe.whitelist()
 def update_driver_location(latitude, longitude):
     user = frappe.session.user
 
+  # Get the driver linked to the current user
     driver = frappe.db.get_value('Driver', {'custom_user': user}, 'name')
     if not driver:
         return "No Driver linked to current user"
 
+    # Check if there's any active (e.g. "Ongoing") trip for this driver
+    trip_exists = frappe.db.exists('Driver Trip', {
+        'driver_id': driver,
+        'status': 'Start',   
+    })
+
+
+    if not trip_exists:
+        return "Driver has no ongoing trip"
+
+    print(driver)
+    print("\n\n\n\n\n\n\n")
+    # Update driver's current location
     frappe.db.set_value('Driver', driver, {
         'custom_latitude': latitude,
         'custom_longitude': longitude
     })
 
     return driver
+
+
+
+import frappe
+from frappe import _
+
+@frappe.whitelist()
+def get_driver_location_by_trip(trip_id):
+    driver_id = frappe.db.get_value("Driver Trip", trip_id, "driver_id")
+    if not driver_id:
+        return {}
+
+    lat, lng = frappe.db.get_value("Driver", driver_id, ["custom_latitude", "custom_longitude"])
+    return {
+        "driver_id": driver_id,
+        "latitude": lat,
+        "longitude": lng
+    }
+
+@frappe.whitelist()
+def get_driver_location(driver_id):
+    lat, lng = frappe.db.get_value("Driver", driver_id, ["custom_latitude", "custom_longitude"])
+    return {
+        "latitude": lat,
+        "longitude": lng
+    }
+
+
+import frappe
+from frappe.utils import now_datetime, flt
+@frappe.whitelist()
+def save_trip_coordinates(trip_id, latitude, longitude):
+    if not (trip_id and latitude and longitude):
+        frappe.throw("Trip ID, latitude, and longitude are required")
+
+    latitude = flt(latitude, 6)
+    longitude = flt(longitude, 6)
+
+    trip_doc = frappe.get_doc("Driver Trip", trip_id)
+
+    # Check for duplicate coordinates
+    if any(flt(child.latitude, 6) == latitude and flt(child.longitude, 6) == longitude
+           for child in trip_doc.trip_route_history):
+        return "duplicate"
+
+    # Append the new coordinates
+    trip_doc.append("trip_route_history", {
+        "latitude": latitude,
+        "longitude": longitude,
+        "timestemp": now_datetime()  # corrected key to match child table field
+    })
+    trip_doc.save(ignore_permissions=True)
+    return "success"
+
+
+# @frappe.whitelist()
+# def get_trip_route_history(trip_id):
+#     if not trip_id:
+#         frappe.throw("Trip ID is required")
+
+#     return frappe.get_all(
+#         "Trip Tracking Log", 
+#         filters={"parent": trip_id},
+#         fields=["latitude", "longitude", "timestemp"],
+#         order_by="timestemp asc"
+#     )
+
+import frappe
+
+@frappe.whitelist(allow_guest=True)
+def get_trip_route_history(trip_id):
+    """
+    Fetch the trip route history for a given trip_id.
+    Returns a list of coordinates (latitude, longitude) for the trip.
+    """
+    try:
+        # Fetch trip route history for the given trip_id from the relevant table
+        trip_history = frappe.db.get_all(
+            'Trip Tracking Log',  # Assuming this is the correct table name
+            filters={'parent': trip_id},  # Filter by trip_id
+            fields=['latitude', 'longitude'],  # Get the latitude and longitude of each point
+            order_by='timestemp'  # Order by timestamp to ensure correct order
+        )
+        
+        if not trip_history:
+            return {"message": "No route history found for this trip."}
+
+        # Return the trip history as a response
+        return {"message": trip_history}
+    
+    except Exception as e:
+        frappe.log_error(f"Error fetching trip route history for trip_id {trip_id}: {str(e)}")
+        return {"error": "An error occurred while fetching the route history."}

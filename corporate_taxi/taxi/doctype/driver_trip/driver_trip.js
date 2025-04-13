@@ -133,7 +133,7 @@ frappe.ui.form.on('Additional Charges', {
     function view_map(frm) {
         frm.add_custom_button(__('View Map'), function() {
             if (frm.doc.pick_up_location && frm.doc.drop_off_location) {
-                let url = `/driver_map?driver=${encodeURIComponent(frm.doc.driver_id)}&pick_up=${encodeURIComponent(frm.doc.pick_up_location_place_id)}&drop_off=${encodeURIComponent(frm.doc.drop_off_location_place_id)}`;
+                let url = `/driver_map?trip_id=${encodeURIComponent(frm.doc.name)}&pick_up=${encodeURIComponent(frm.doc.pick_up_location_place_id)}&drop_off=${encodeURIComponent(frm.doc.drop_off_location_place_id)}`;
                 window.open(url, '_blank');
             } else {
                 frappe.msgprint(__('Please select both Pick-up and Drop-off locations.'));
