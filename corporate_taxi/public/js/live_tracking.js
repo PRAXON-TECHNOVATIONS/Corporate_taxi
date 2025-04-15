@@ -1278,11 +1278,14 @@ async function drawTripRouteFromHistory(trip_id) {
                     const destinationRow = r.message.message[r.message.message.length - 1];  // Last row (destination)
                     const prev_coords = r.message.message[r.message.message.length - 2];
                    
-                    const prev_end_coord = { lat: prev_coords.latitude, lng: prev_coords.longitude };
+                    if(prev_coords)
+                    {
+                        console.log("AFTER PREV CODE");
+                        const prev_end_coord = { lat: prev_coords.latitude, lng: prev_coords.longitude };
 
-                    // Call removeMarkerByCoords with only the end coordinates
-                    removeMarkerByCoords(prev_end_coord);
-
+                        // Call removeMarkerByCoords with only the end coordinates
+                        removeMarkerByCoords(prev_end_coord);
+                    }
     
                     const originCoords = {
                         lat: parseFloat(originRow.latitude),
