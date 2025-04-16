@@ -46,7 +46,7 @@
 //         style: "https://api.olamaps.io/tiles/vector/v1/styles/default-light-standard/style.json",
 //         container: 'map',
 //         center: [77.616484, 12.931423], // Default center (Bangalore)
-//         zoom: 12,
+//         zoom: 5,
 //     });
 
 //     // Add geolocation control to track user location
@@ -226,7 +226,7 @@
 //         style: "https://api.olamaps.io/tiles/vector/v1/styles/default-light-standard/style.json",
 //         container: 'map',
 //         center: [77.616484, 12.931423],
-//         zoom: 12,
+//         zoom: 5,
 //     });
 
 //     const geolocate = olaMaps.addGeolocateControls({
@@ -635,7 +635,7 @@
 //         style: "https://api.olamaps.io/tiles/vector/v1/styles/default-light-standard/style.json",
 //         container: 'map',
 //         center: [77.616484, 12.931423],
-//         zoom: 12,
+//         zoom: 5,
 //     });
 
 //     const geolocate = olaMaps.addGeolocateControls({
@@ -1000,7 +1000,7 @@ function initializeMap() {
         style: "https://api.olamaps.io/tiles/vector/v1/styles/default-light-standard/style.json",
         container: 'map',
         center: [77.616484, 12.931423],
-        zoom: 12,
+        zoom: 5,
     });
 
     const geolocate = olaMaps.addGeolocateControls({
@@ -1045,19 +1045,19 @@ function initializeMap() {
 
 function setMarker(lat, lng, type) {
     if (!myMap || !olaMaps) return;
-    const color = type === "start-location" ? "green" : type === "end-location" ? "red" : "blue";
 
+    let color;
     if (type === "start-location") {
+        color = "green";
         if (startMarker) myMap.removeLayer(startMarker);
         startMarker = olaMaps.addMarker({ color }).setLngLat([lng, lat]).addTo(myMap);
     } else if (type === "end-location") {
+        color = "red";
         if (endMarker) myMap.removeLayer(endMarker);
         endMarker = olaMaps.addMarker({ color }).setLngLat([lng, lat]).addTo(myMap);
-    } else {
-        if (userMarker) myMap.removeLayer(userMarker);
-        userMarker = olaMaps.addMarker({ color: "blue" }).setLngLat([lng, lat]).addTo(myMap);
     }
 }
+
 
 async function fetchPlaceDetails(placeId) {
     try {
@@ -1136,7 +1136,7 @@ function loadDriverInfo() {
 
                 setTimeout(() => {
                     startDriverLocationTracking();
-                }, 1000);
+                }, 50000);
 
                
             } else {
@@ -1178,7 +1178,7 @@ function startDriverLocationTracking() {
             }
         });
         console.log("Update driver location");
-    }, 10000);
+    }, 50000);
 }
 
 function updateDriverMarker(lat, lng) {
@@ -1188,11 +1188,7 @@ function updateDriverMarker(lat, lng) {
 
     if (driverMarker) {
         driverMarker.setLngLat(currentCoords);
-    } else {
-        driverMarker = olaMaps.addMarker({ color: "blue" })
-            .setLngLat(currentCoords)
-            .addTo(myMap);
-    }
+    } 
 
     if (!previousCoords || previousCoords[0] !== currentCoords[0] || previousCoords[1] !== currentCoords[1]) {
         routeCoords.push(currentCoords);
