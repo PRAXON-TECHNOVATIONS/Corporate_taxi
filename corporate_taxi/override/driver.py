@@ -139,32 +139,92 @@ def update_current_user_location():
 #     return driver
 
 
+# @frappe.whitelist()
+# def update_driver_location(latitude, longitude):
+#     user = frappe.session.user
+
+#   # Get the driver linked to the current user
+#     driver = frappe.db.get_value('Driver', {'custom_user': user}, 'name')
+#     if not driver:
+#         return "No Driver linked to current user"
+
+#     # Check if there's any active (e.g. "Ongoing") trip for this driver
+#     trip_exists = frappe.db.exists('Driver Trip', {
+#         'driver_id': driver,
+#         'status': 'Running',   
+#     })
+
+#     print(trip_exists)
+#     print("\n\n\n\n\n\n")
+
+#     if not trip_exists:
+#         return "Driver has no ongoing trip"
+
+#     if trip_exists:
+#         trip_doc = frappe.get_doc("Driver Trip", trip_exists)
+
+#         # Check for duplicate coordinates
+#         if any(flt(child.latitude) == latitude and flt(child.longitude) == longitude
+#             for child in trip_doc.trip_route_history):
+#             return "duplicate"
+
+#         # Append the new coordinates
+#         trip_doc.append("trip_route_history", {
+#             "latitude": latitude,
+#             "longitude": longitude,
+#             "timestemp": now_datetime()  # corrected key to match child table field
+#         })
+#         trip_doc.save(ignore_permissions=True)
+#         trip_doc.reload()
+
+#     return driver
+
+
 @frappe.whitelist()
 def update_driver_location(latitude, longitude):
+    from frappe.utils import flt, now_datetime
+
     user = frappe.session.user
 
-  # Get the driver linked to the current user
+    # Get the driver linked to the current user
     driver = frappe.db.get_value('Driver', {'custom_user': user}, 'name')
     if not driver:
         return "No Driver linked to current user"
 
-    # Check if there's any active (e.g. "Ongoing") trip for this driver
+    # Check if there's any active (Running) trip for this driver
     trip_exists = frappe.db.exists('Driver Trip', {
         'driver_id': driver,
-        'status': 'Start',   
+        'status': 'Running',
     })
 
-
+  
     if not trip_exists:
         return "Driver has no ongoing trip"
 
-    print(driver)
-    print("\n\n\n\n\n\n\n")
-    # Update driver's current location
-    frappe.db.set_value('Driver', driver, {
-        'custom_latitude': latitude,
-        'custom_longitude': longitude
+    # Get the active trip doc
+    trip_doc = frappe.get_doc("Driver Trip", trip_exists)
+
+    # Convert to float and round for consistent comparison
+    lat = round(flt(latitude), 6)
+    lng = round(flt(longitude), 6)
+
+    # Check if these coordinates already exist in this trip
+    is_duplicate = any(
+        round(flt(child.latitude), 6) == lat and round(flt(child.longitude), 6) == lng
+        for child in trip_doc.trip_route_history
+    )
+
+    if is_duplicate:
+        return "duplicate"
+
+    # Append new location to trip_route_history
+    trip_doc.append("trip_route_history", {
+        "latitude": lat,
+        "longitude": lng,
+        "timestemp": now_datetime()
     })
+    trip_doc.save(ignore_permissions=True)
+    trip_doc.reload()
 
     return driver
 
@@ -202,13 +262,13 @@ def save_trip_coordinates(trip_id, latitude, longitude):
     if not (trip_id and latitude and longitude):
         frappe.throw("Trip ID, latitude, and longitude are required")
 
-    latitude = flt(latitude, 6)
-    longitude = flt(longitude, 6)
+    latitude = flt(latitude, 9)
+    longitude = flt(longitude, 9)
 
     trip_doc = frappe.get_doc("Driver Trip", trip_id)
 
     # Check for duplicate coordinates
-    if any(flt(child.latitude, 6) == latitude and flt(child.longitude, 6) == longitude
+    if any(flt(child.latitude) == latitude and flt(child.longitude) == longitude
            for child in trip_doc.trip_route_history):
         return "duplicate"
 
