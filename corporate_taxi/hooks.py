@@ -268,5 +268,6 @@ scheduler_events = {
 # }
 
 fixtures = [
-    {"doctype":"Print Format","filters":[["module","in",("taxi")]]}
+    {"doctype":"Print Format","filters":[["module","in",("taxi")]]},
+    'Builder Settings','Builder Page','Builder Client Script'
 ]
