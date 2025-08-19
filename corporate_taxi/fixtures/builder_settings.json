@@ -1,13 +1,13 @@
 [
  {
-  "auto_convert_images_to_webp": 1,
+  "auto_convert_images_to_webp": 0,
   "body_html": "<script>\r\ndocument.getElementById(\"suvBtn\").onclick = function() {\r\n    document.getElementById(\"carImage\").style.margin = \"50px\";\r\n}\r\ndocument.getElementById(\"sedanBtn\").onclick = function() {\r\n    document.getElementById(\"carImage\").style.margin = \"10px\";\r\n}\r\n</script>\r\n",
   "docstatus": 0,
   "doctype": "Builder Settings",
   "favicon": null,
   "head_html": "",
-  "home_page": null,
-  "modified": "2025-08-13 15:43:31.443036",
+  "home_page": "/home",
+  "modified": "2025-08-19 17:43:00.814804",
   "name": "Builder Settings",
   "script": "",
   "script_public_url": "",

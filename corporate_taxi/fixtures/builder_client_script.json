@@ -4,7 +4,7 @@
   "doctype": "Builder Client Script",
   "modified": "2025-08-13 16:00:09.401314",
   "name": "JavaScript-895da",
-  "public_url": "/files/page_scripts/JavaScript-895da-634177d658.js?v=825da30c4f",
+  "public_url": "/files/page_scripts/JavaScript-895da-634177d658.js?v=acefb52944",
   "script": "<script>\ndocument.getElementById(\"SUV/MUV\").onclick = function() {\n    document.getElementById(\"carimage\").style.marginLeft = \"50px\";\n}\ndocument.getElementById(\"Sedan\").onclick = function() {\n    document.getElementById(\"carimage\").style.marginLeft = \"0px\";\n}\n</script>\n\n",
   "script_type": "JavaScript"
  },
@@ -13,7 +13,7 @@
   "doctype": "Builder Client Script",
   "modified": "2025-08-13 17:24:55.286626",
   "name": "CSS-0a8bb",
-  "public_url": "/files/page_styles/CSS-0a8bb-eea9f92aa1.css?v=1c60ef6633",
+  "public_url": "/files/page_styles/CSS-0a8bb-eea9f92aa1.css?v=ac3cc226c7",
   "script": "/* Center stage */\n.car-stage {\n  position: relative;\n  min-height: 320px;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\n/* All images stacked and hidden */\n.car-img {\n  position: absolute;\n  max-width: min(560px, 90%);\n  height: auto;\n  opacity: 0;\n  visibility: hidden;\n  transform: translateY(6px) scale(.98);\n  transition: opacity .35s ease, transform .35s ease, visibility 0s linear .35s;\n}\n\n/* Active image is visible */\n.car-img.active {\n  opacity: 1;\n  visibility: visible;\n  transform: translateY(0) scale(1);\n  transition: opacity .35s ease, transform .35s ease, visibility 0s;\n}\n\n",
   "script_type": "CSS"
  },
@@ -22,7 +22,7 @@
   "doctype": "Builder Client Script",
   "modified": "2025-08-13 17:14:57.122349",
   "name": "CSS-e37d5",
-  "public_url": "/files/page_styles/CSS-e37d5-23267aed31.css?v=1c743a7380",
+  "public_url": "/files/page_styles/CSS-e37d5-23267aed31.css?v=c3a90b9583",
   "script": "/* Center stage */\r\n.car-stage {\r\n  position: relative;\r\n  min-height: 320px;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n}\r\n\r\n/* All images stacked and hidden */\r\n.car-img {\r\n  position: absolute;\r\n  max-width: min(560px, 90%);\r\n  height: auto;\r\n  opacity: 0;\r\n  visibility: hidden;\r\n  transform: translateY(6px) scale(.98);\r\n  transition: opacity .35s ease, transform .35s ease, visibility 0s linear .35s;\r\n}\r\n\r\n/* Active image is visible */\r\n.car-img.active {\r\n  opacity: 1;\r\n  visibility: visible;\r\n  transform: translateY(0) scale(1);\r\n  transition: opacity .35s ease, transform .35s ease, visibility 0s;\r\n}\r\n",
   "script_type": "CSS"
  }
